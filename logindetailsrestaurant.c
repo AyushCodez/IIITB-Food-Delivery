@@ -13,6 +13,7 @@ struct Restaurant{
     char restaurantname[30]; //note this must be unique
     char distance[3]; //it is the distance from IIITB 
     char address[50];
+    char typeofrestaurant[15]; //fine dining or regular or fastfood outlet....
 };
 struct RestaurantOwner{
     char username[20]; //note this must be unique
@@ -75,7 +76,7 @@ int main(){
     else{
 	    printf("HAVEFUN\n");
     }
-    fptr=fopen("out_file","a");
+    fptr=fopen("login_file","a");
 	for(int i=0;i<cadd;i++){
 		fprintf(fptr,"%s %s %s %s %s %s %s\n",r[i].restaurantname,ro[i].username,ro[i].password,r[i].distance,ro[i].contactnumber,ro[i].emailid,r[i].address);
 	}
