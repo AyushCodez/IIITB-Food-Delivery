@@ -72,7 +72,7 @@ deliveries* remove_delivery(deliveries* delivery_list_head, char id){
 }
 
 void show_orders(deliveries* a){//Need to make changes(Owais)
-    system("clear");
+        system("clear");
     printf("\t\t\t\tDelivery Available!\n\n\t\t\t\tRestaurant Address is %s\n\t\t\t\tDelivery Address is %s\n\n\t\t\t\tDo you want to accept the delivery or not?\n\t\t\t\tYes or No:",(a->details).r_a,(a->details).u_a);
     char r[3];
 }
@@ -105,5 +105,15 @@ void main(){
         system("clear");
         printf("Do you want to exit the application?");
         scanf("%s",exit);
+        while(1){
+            printf("\t\t\t\tDo you want to\n\n\t\t\t\tCheck for new orders?(Press Yes)\n\n\t\t\t\tOr exit the application?(Press exit)\n\n\t\t\t\tResponse:");
+            scanf("%s",r);
+            if(strcmp(r,"exit")==0) break;
+            else if(atoi(r)>0 && atoi(r)<=15){
+                orderaccept(atoi(r));
+
+            }
+            else printf("\t\t\t\tInvalid Response, please try again");
+        }
     }while(1);
 }
