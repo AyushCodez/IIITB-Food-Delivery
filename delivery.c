@@ -136,6 +136,7 @@ void main(){
         deliveries* a = read_details_from_file(order_file);
         show_orders(a);
         system("clear");
+        printf("Do you want to exit the application?");
         scanf("%s",exit);
         while(1){
             printf("\t\t\t\tDo you want to\n\n\t\t\t\tCheck for new orders?(Press Yes)\n\n\t\t\t\tOr exit the application?(Press exit)\n\n\t\t\t\tResponse:");
