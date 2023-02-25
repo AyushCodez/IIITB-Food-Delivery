@@ -60,24 +60,57 @@ deliveries* read_details_from_file(FILE * p){
 
 
 food_details_list* add_food_item(food_details_list* food_list_head,food_details* new_item){
-//(Kausthubh)
+    food_details_list * new_food_list;
+    new_food_list -> details = *(new_item);
+    new_food_list -> next = food_list_head;
+    return new_food_list;
 }
 
 deliveries* add_new_delivery(deliveries* delivery_list_head,delivery_details* new_delivery){
-//(Kausthubh)
+    deliveries * new_delivery_list;
+    new_delivery_list -> details = *(new_delivery);
+    new_delivery_list -> next = delivery_list_head;
+    return new_delivery_list;
 }
 
 deliveries* remove_delivery(deliveries* delivery_list_head, char id){
-//(Kausthubh)
+    if(n == 1){
+        return delivery_list_head -> next;
+    }
+    deliveries * current_delivery = delivery_list_head;
+    deliveries * previous_delivery = delivery_list_head;
+    for(int i = 0; i < n - 1; i++)
+    {
+        previous_delivery = current_delivery;
+        current_delivery = current_delivery -> next;
+    }
+    previous_delivery -> next = current_delivery -> next;
+    free(current_delivery);
+    return delivery_list_head;
 }
 
 void show_orders(deliveries* a){//Need to make changes(Owais)
-        system("clear");
-    printf("\t\t\t\tDelivery Available!\n\n\t\t\t\tRestaurant Address is %s\n\t\t\t\tDelivery Address is %s\n\n\t\t\t\tDo you want to accept the delivery or not?\n\t\t\t\tYes or No:",(a->details).r_a,(a->details).u_a);
     char r[3];
+    while(1){
+        system("clear");
+        printf("\t\t\t\tDeliveries Available!\n\n");
+        int i = 1;
+        while(a->next!=NULL){
+            printf("\t\t\t\tOrder Number is %d. Restaurant Address is %s\n\t\t\t\tDelivery Address is %s\n\n", i, (a->details).r_a,(a->details).u_a);
+            i++;
+        }
+        printf("What order number do you want to accept?.Press number to accept or 'exit' to go back:");
+        scanf("%s",r);
+        if(strcmp(r,"exit")==0||strcmp(r,"Exit")==0||strcmp(r,"EXIT")==0) break;
+        else if(atoi(r)>0 && atoi(r)<=15){
+            orderaccept(atoi(r));
+
+        }
+        else printf("\t\t\t\tInvalid Response, please try again");
+    }
 }
 
-void orderaccept(){
+void orderaccept(int i){
 //the deliveries that are accepted are put into a file, and then the customer can see that his order was accepted(Kausthubh)
 }
 
@@ -103,7 +136,6 @@ void main(){
         deliveries* a = read_details_from_file(order_file);
         show_orders(a);
         system("clear");
-        printf("Do you want to exit the application?");
         scanf("%s",exit);
         while(1){
             printf("\t\t\t\tDo you want to\n\n\t\t\t\tCheck for new orders?(Press Yes)\n\n\t\t\t\tOr exit the application?(Press exit)\n\n\t\t\t\tResponse:");
