@@ -6,72 +6,72 @@
 #define SIZE 100
 
 typedef struct{
+    char name[30];//name of dish
+    int quantity;//quantity of dish
+} food_details;//linkedlist of individual food items
+
+typedef struct{
+    food_details details;
+    food_details* next;
+} food_details_list;//linkedlist of individual food items
+
+typedef struct{
     char name[20];
     char id[14];
     char u_a[30]; //user address
     char r_a[30]; //restaurant address
+    food_details_list* foods;
 
 } delivery_details;//delivery details of one customer
 
 typedef struct{
-    char name[30];//name of dish
-    int quantity;//quantity of dish
-    food_details* next;
-} food_details;//linkedlist of individual food items
-
-typedef struct{
     delivery_details details;
-    food_details food;
-    deliveries* next;
+    delivery_details* next;
 } deliveries;//linkedlist of all deliveries
-
 
 void orderaccept();
 void orderdecline();
-void show_order(delivery_details* a);
-int check_file_for_changes();
-delivery_details* read_details_from_file(FILE * p);
-food_details* add_food_item(food_details* food_list_head,food_details* new_item);
-deliveries* add_new_delivery(deliveries* delivery_list_head,deliveries* new_delivery);
+void show_orders(deliveries* a);
+void check_file_for_changes();
+deliveries* read_details_from_file(FILE * p);
+food_details_list* add_food_item(food_details_list* food_list_head,food_details* new_item);
+deliveries* add_new_delivery(deliveries* delivery_list_head,delivery_details* new_delivery);
 deliveries* remove_delivery(deliveries* delivery_list_head,char id);//use id from delivery details inside deliveries to delete the element
 
 deliveries* read_details_from_file(FILE * p){
 
     delivery_details* a = malloc(sizeof(delivery_details));
-    food_details* food_list_head = malloc(sizeof(food_details)); 
     deliveries* delivery_list_head = malloc(sizeof(deliveries)); 
-
     food_details* new_item = malloc(sizeof(food_details)); 
-    deliveries* new_deilvery = malloc(sizeof(deliveries)); 
+    food_details_list* food_list_head = malloc(sizeof(food_details)); 
 
     while(fscanf( p ,"%s %s %s %s", a->name, a->id, a->u_a, a->r_a)!=EOF){
         int n;//number of food items
         while(n--){
-            
-            fscanf(p ,"%s %s", new_item->name, new_item->number);
-            food_list_head = add_food_item(food_list_headf, new_item);
-            new_delivery->details = a;
-            new_delivery->food = food_list_head;
-            delivery_list_head = add_new_delivery(delivery_list_head, new_delivery);
+            fscanf(p ,"%s %d", new_item->name, &new_item->quantity);
+            //use your otp thing to add an otp at end of phone number to make it into a delivery id
+            food_list_head = add_food_item(food_list_head, new_item);
+            a->foods = food_list_head;
+            delivery_list_head = add_new_delivery(delivery_list_head, a);
         }
     }
     return delivery_list_head;
 }
 
 
-food_details* add_food_item(food_details* food_list_head,food_details* new_item){
+food_details_list* add_food_item(food_details_list* food_list_head,food_details* new_item){
 //
 }
 
-deliveries* add_new_delivery(deliveries* delivery_list_head,deliveries* new_delivery){
+deliveries* add_new_delivery(deliveries* delivery_list_head,delivery_details* new_delivery){
 //
 }
 
-deliveries* remove_delivery(deliveries* delivery_list_head,deliveries* delivery){
+deliveries* remove_delivery(deliveries* delivery_list_head, char id){
 //
 }
 
-int show_order(delivery_details* a){//I'll fix this later(Owais)
+void show_orders(deliveries* a){//I'll fix this later(Owais)
     system("clear");
     printf("\t\t\t\tDelivery Available!\n\n\t\t\t\tRestaurant Address is %s\n\t\t\t\tDelivery Address is %s\n\n\t\t\t\tDo you want to accept the delivery or not?\n\t\t\t\tYes or No:",a->r_a,a->u_a);
     char r[3];
@@ -82,7 +82,9 @@ void orderaccept(){
 }
 
 void check_file_for_changes(FILE* p){
+    int oldval = 0;
     do{
+        int newval;
         fscanf(p,"%d",&newval);
         if(newval!=oldval){
             return;
@@ -93,13 +95,13 @@ void check_file_for_changes(FILE* p){
 }
 
 void main(){
-    FILE* cust_order = fopen(cust_order,"r");
+    FILE* order_file = fopen(cust_order,"r");
     int filechanged, newval, oldval = 0;
     char exit[4];
     do{//needs work, i'll do(Owais)
-        check_file_for_changes(cust_order,"r");//Do we make a flag file?
-        delivery_details* a = read_details_from_file(p);
-        show_order(a);
+        check_file_for_changes(order_file);//Do we make a flag file?
+        deliveries* a = read_details_from_file(order_file);
+        show_orders(a);
         system("clear");
         printf("Do you want to exit the application?");
         scanf("%s",exit);
