@@ -8,7 +8,7 @@
 typedef struct{
     char name[30];//name of dish
     int quantity;//quantity of dish
-} food_details;//linkedlist of individual food items
+} food_details;//food detials struct
 
 typedef struct{
     food_details details;
@@ -49,7 +49,7 @@ deliveries* read_details_from_file(FILE * p){
         int n;//number of food items
         while(n--){
             fscanf(p ,"%s %d", new_item->name, &new_item->quantity);
-            //use your otp thing to add an otp at end of phone number to make it into a delivery id
+            //use your otp thing to add an otp at end of phone number to make it into a delivery id(Kausthubh)
             food_list_head = add_food_item(food_list_head, new_item);
             a->foods = food_list_head;
             delivery_list_head = add_new_delivery(delivery_list_head, a);
@@ -60,25 +60,25 @@ deliveries* read_details_from_file(FILE * p){
 
 
 food_details_list* add_food_item(food_details_list* food_list_head,food_details* new_item){
-//
+//(Kausthubh)
 }
 
 deliveries* add_new_delivery(deliveries* delivery_list_head,delivery_details* new_delivery){
-//
+//(Kausthubh)
 }
 
 deliveries* remove_delivery(deliveries* delivery_list_head, char id){
-//
+//(Kausthubh)
 }
 
-void show_orders(deliveries* a){//I'll fix this later(Owais)
+void show_orders(deliveries* a){//Need to make changes(Owais)
     system("clear");
-    printf("\t\t\t\tDelivery Available!\n\n\t\t\t\tRestaurant Address is %s\n\t\t\t\tDelivery Address is %s\n\n\t\t\t\tDo you want to accept the delivery or not?\n\t\t\t\tYes or No:",a->r_a,a->u_a);
+    printf("\t\t\t\tDelivery Available!\n\n\t\t\t\tRestaurant Address is %s\n\t\t\t\tDelivery Address is %s\n\n\t\t\t\tDo you want to accept the delivery or not?\n\t\t\t\tYes or No:",(a->details).r_a,(a->details).u_a);
     char r[3];
 }
 
 void orderaccept(){
-//the deliveries that are accepted are put into a file, and then the customer can see that his order was accepted
+//the deliveries that are accepted are put into a file, and then the customer can see that his order was accepted(Kausthubh)
 }
 
 void check_file_for_changes(FILE* p){
@@ -98,7 +98,7 @@ void main(){
     FILE* order_file = fopen(cust_order,"r");
     int filechanged, newval, oldval = 0;
     char exit[4];
-    do{//needs work, i'll do(Owais)
+    do{
         check_file_for_changes(order_file);//Do we make a flag file?
         deliveries* a = read_details_from_file(order_file);
         show_orders(a);
