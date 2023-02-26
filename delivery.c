@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define cust_order "/home/owais/Desktop/cust_order.txt"
-#define flagfile "/home/owais/Desktop/flag_file.txt"
+#define cust_order "cust_order.txt"
+#define flagfile "flag_file.txt"
 #define accept_file "/home/owais/Desktop/accept_file.txt"
 
 typedef struct{
