@@ -4,7 +4,7 @@
 
 #define cust_order "cust_order.txt"
 #define flagfile "flag_file.txt"
-#define accept_file "/home/owais/Desktop/accept_file.txt"
+#define accept_file "accept_file.txt"
 
 typedef struct{
     char name[30];//name of dish
@@ -33,14 +33,14 @@ struct deliveries{
 
 void orderdecline();
 void show_orders(struct deliveries* a);
-void check_file_for_changes(char* p,int* o);
+void check_file_for_changes(int* o);
 struct deliveries* read_details_from_file(FILE * p);
 struct food_details_list* add_food_item(struct food_details_list* food_list_head,food_details* new_item);
 struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delivery_details* new_delivery);
-struct deliveries* orderaccept(struct deliveries* delivery_list_head, int i);
-void print_delivery(struct deliveries* current_delivery,FILE* p);
+delivery_details* order_accept(struct deliveries* delivery_list_head, int n);
+void print_delivery(delivery_details* current_delivery,FILE* p);
 
-struct deliveries* read_details_from_file(FILE * p){
+struct deliveries* read_details_from_file(FILE * p){//Works perfectly
 
     struct deliveries* delivery_list_head = malloc(sizeof(struct deliveries)); 
     delivery_list_head = NULL;
@@ -65,14 +65,14 @@ struct deliveries* read_details_from_file(FILE * p){
 }
 
 
-struct food_details_list* add_food_item(struct food_details_list* food_list_head,food_details* new_item){
+struct food_details_list* add_food_item(struct food_details_list* food_list_head,food_details* new_item){//Works perfectly
     struct food_details_list * new_list_item = malloc(sizeof(struct food_details_list));
     new_list_item -> details = *(new_item);
     new_list_item -> next = food_list_head;
     return new_list_item;
 }
 
-struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delivery_details* new_delivery){
+struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delivery_details* new_delivery){//Works perfectly
     struct deliveries * new_delivery_list = malloc(sizeof(struct deliveries));
     new_delivery_list->details = *(new_delivery);
     if(delivery_list_head == NULL){
@@ -81,55 +81,53 @@ struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delive
     }
     struct deliveries * head_copy = delivery_list_head;
     while(delivery_list_head->next != NULL){
-        printf("%s\n",new_delivery->name);
         delivery_list_head = delivery_list_head->next;
     }
     delivery_list_head->next = new_delivery_list;
     return head_copy;
 }
 
-struct deliveries* orderaccept(struct deliveries* delivery_list_head, int n){
-    if(n == 1){
-        return delivery_list_head -> next;
-    }
-    struct deliveries * current_delivery = delivery_list_head;
-    struct deliveries * previous_delivery = delivery_list_head;
+delivery_details* order_accept(struct deliveries* delivery_list_head, int n){//Works perfectly
+    delivery_details* accepted_delivery = malloc(sizeof(delivery_details));
     for(int i = 1; i < n; i++){
-        previous_delivery = current_delivery;
-        current_delivery = current_delivery -> next;
+        delivery_list_head = delivery_list_head->next;
     }
-    previous_delivery -> next = current_delivery -> next;
+    accepted_delivery = &delivery_list_head->details;
     FILE* p = fopen(accept_file,"a");
-    print_delivery(current_delivery,p);
-    free(current_delivery);
-    return delivery_list_head;
+    print_delivery(accepted_delivery,p);
+    fclose(p);
+    return accepted_delivery;
 }
 
-void print_delivery(struct deliveries* c,FILE* p){
-    fprintf(p,"%s %s %s %s",(c->details).name, (c->details).id ,(c->details).u_a ,(c->details).r_a);
-    fprintf(p,"%d",(c->details).n);
-    struct food_details_list* foods = (c->details).foods;
-    while(foods->next!=NULL){
-        fprintf(p,"%s %d",(foods->details).name, (foods->details).quantity);
+void print_delivery(delivery_details* c,FILE* p){//Needs debugging
+    fprintf(p,"%s %s %s %s\n",c->name, c->id ,c->u_a ,c->r_a);
+    fprintf(p,"%d\n",c->n);
+    struct food_details_list* foods = c->foods;
+    while(foods!=NULL){
+        fprintf(p,"%s %d\n",(foods->details).name, (foods->details).quantity);
+        foods = foods->next;
     }
 }
 
-void show_orders(struct deliveries* a){//Need to make changes(Owais)
+void show_orders(struct deliveries* a){//Needs debugging
     char r[3];
     while(1){
-        system("clear");
+        //system("clear");
         printf("\t\t\t\tDeliveries Available!\n\n");
         int i = 1;
-        while(a!=NULL){
-            printf("\t\t\t\tOrder Number is %d. Restaurant Address is %s\n\t\t\t\tDelivery Address is %s\n\n", i, (a->details).r_a,(a->details).u_a);
+        struct deliveries* copy = a;
+        while(copy!=NULL){
+            printf("\t\t\t\tOrder Number %d.\n\t\t\t\tRestaurant Address is %s\n\t\t\t\tDelivery Address is %s\n\n", i, (copy->details).r_a,(copy->details).u_a);
             i++;
-            a = a->next;
+            copy = copy->next;
         }
         printf("What order number do you want to accept?.Press number to accept or 'exit' to go back:");
         scanf("%s",r);
         if(strcmp(r,"exit")==0||strcmp(r,"Exit")==0||strcmp(r,"EXIT")==0) break;
         else if(atoi(r)>0 && atoi(r)<=i){
-            a = orderaccept(a,atoi(r));
+            delivery_details* accepted_delivery = order_accept(a,atoi(r));
+            system("clear");
+            printf("\t\t\t\tYou have accepted an order.\n\n\t\t\t\tDelivery is from %s to %s\n", accepted_delivery->r_a, accepted_delivery->u_a);
             break;
         }
         else{
@@ -139,10 +137,10 @@ void show_orders(struct deliveries* a){//Need to make changes(Owais)
     }
 }
 
-void check_file_for_changes(char * flag_file_str,int* o){
+void check_file_for_changes(int* o){//Works perfectly
     int newval;
     do{
-        FILE* p = fopen(flag_file_str,"r");
+        FILE* p = fopen(flagfile,"r");
         fscanf(p,"%d",&newval);
         fclose(p);
         if(newval != *o){
@@ -151,8 +149,7 @@ void check_file_for_changes(char * flag_file_str,int* o){
     }while(1);
 }
 
-void main(){
-    FILE* order_file = fopen(cust_order,"r");
+void main(){//Works perfectly
     FILE* flag_file = fopen(flagfile,"r");
     int oldval;
     fscanf(flag_file,"%d",&oldval);
@@ -162,12 +159,16 @@ void main(){
     do{
         system("clear");
         while(1){
-            printf("\t\t\t\tDo you want to\n\n\t\t\t\tCheck for new orders?(Press Yes)\n\n\t\t\t\tOr exit the application?(Press exit)\n\n\t\t\t\tResponse:");
+            printf("\n\n\t\t\t\tDo you want to\n\n\t\t\t\tCheck for new orders?(Press Yes)\n\n\t\t\t\tOr exit the application?(Press exit)\n\n\t\t\t\tResponse:");
             scanf("%s",r);
-            if(strcmp(r,"exit")==0||strcmp(r,"Exit")==0||strcmp(r,"EXIT")==0) break;
+            if(strcmp(r,"exit")==0||strcmp(r,"Exit")==0||strcmp(r,"EXIT")==0){
+                break;
+            }
             else if(strcmp(r,"yes")==0||strcmp(r,"Yes")==0||strcmp(r,"YES")==0){
-                check_file_for_changes(flagfile,o);
+                check_file_for_changes(o);
+                FILE* order_file = fopen(cust_order,"r");
                 struct deliveries* a = read_details_from_file(order_file);
+                fclose(order_file);
                 show_orders(a);
             }
             else{
@@ -177,4 +178,6 @@ void main(){
         }
         break;
     }while(1);
+    system("clear");
+    printf("\t\t\t\tThank You!\n");
 }
