@@ -74,16 +74,18 @@ struct food_details_list* add_food_item(struct food_details_list* food_list_head
 
 struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delivery_details* new_delivery){
     struct deliveries * new_delivery_list = malloc(sizeof(struct deliveries));
-    new_delivery_list -> details = *(new_delivery);
-    //new_delivery_list -> next = NULL;
-    //if(delivery_list_head == NULL){
-    //    return new_delivery_list;
-    //}
-    //struct deliveries * head_copy = delivery_list_head;
-    //while(delivery_list_head -> next != NULL) delivery_list_head = delivery_list_head->next;
-    //return head_copy;
-    //new_delivery_list -> next = delivery_list_head;
-    return new_delivery_list;
+    new_delivery_list->details = *(new_delivery);
+    if(delivery_list_head == NULL){
+        new_delivery_list->next = NULL;
+        return new_delivery_list;
+    }
+    struct deliveries * head_copy = delivery_list_head;
+    while(delivery_list_head->next != NULL){
+        printf("%s\n",new_delivery->name);
+        delivery_list_head = delivery_list_head->next;
+    }
+    delivery_list_head->next = new_delivery_list;
+    return head_copy;
 }
 
 struct deliveries* orderaccept(struct deliveries* delivery_list_head, int n){
@@ -125,7 +127,7 @@ void show_orders(struct deliveries* a){//Need to make changes(Owais)
         }
         printf("What order number do you want to accept?.Press number to accept or 'exit' to go back:");
         scanf("%s",r);
-        if(strcmp(r,"exit")==0||strcmp(r,"Exit")==0||strcmp(r,"EXIT")==0) return;
+        if(strcmp(r,"exit")==0||strcmp(r,"Exit")==0||strcmp(r,"EXIT")==0) break;
         else if(atoi(r)>0 && atoi(r)<=i){
             a = orderaccept(a,atoi(r));
             break;
@@ -166,7 +168,6 @@ void main(){
             else if(strcmp(r,"yes")==0||strcmp(r,"Yes")==0||strcmp(r,"YES")==0){
                 check_file_for_changes(flagfile,o);
                 struct deliveries* a = read_details_from_file(order_file);
-                printf("%s %s",a->details.name,a->next->details.name);
                 show_orders(a);
             }
             else{
