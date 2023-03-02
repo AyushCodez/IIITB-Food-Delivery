@@ -1,0 +1,14 @@
+Owais 8296177123 B-216 Savoury_Seashells
+4
+Grill_Chicken 1
+Butter_Naan 2
+Dal_tadka 1
+Ghee_Rice 1
+Sarvesh 9876543210 B-227 Any_chicken_restaurant
+1
+Any_chicken_dish 5
+Samyak 9123456789 B-232 Gramin
+3
+Paneer_Tikka 1
+Tandoori_Roti 3
+Veg_Angara 1
