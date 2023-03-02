@@ -16,10 +16,12 @@ struct hotel {
     struct food_item menu[50];
 };
 
-void add_item(struct hotel *h, char *name, char *price) {
+void add_item(struct hotel *h, char *name, char *type,char *category,char *price) {
     struct food_item item;
     strcpy(item.nameofdish, name);
-    strcpy(item.priceofdish, price);
+    strcpy(item.typeofdish, type);
+    strcpy(item.categoryofdish, category);
+    strcpy(item.priceofdish, price);    
     (*h).menu[(*h).num_items] = item;
     (*h).num_items++;
 }
@@ -27,7 +29,7 @@ void add_item(struct hotel *h, char *name, char *price) {
 void print_menu(struct hotel *h) {
     printf("Menu for %s:\n", h->name);
     for (int i = 0; i < h->num_items; i++) {
-        printf("%d. %s - %s\n", i+1, h->menu[i].nameofdish, h->menu[i].priceofdish);
+        printf("%d %s %s %s %s\n", i+1, h->menu[i].nameofdish,h->menu[i].typeofdish, h->menu[i].categoryofdish, h->menu[i].priceofdish);
     }
 }
 
@@ -56,7 +58,7 @@ int main() {
 
     for(int i = 0;i<cadd;i++){
         //printf("%s %s %s %s\n",d[i].nameofdish,d[i].typeofdish,d[i].categoryofdish,d[i].priceofdish);
-        add_item(&my_hotel,d[i].nameofdish,d[i].priceofdish);
+        add_item(&my_hotel,d[i].nameofdish,d[i].typeofdish,d[i].categoryofdish,d[i].priceofdish);
     }
 
     print_menu(&my_hotel);
@@ -77,7 +79,7 @@ int main() {
     int total = 0;
     for (int i = 0; i < num_items; i++) {
         int index = cart[i];
-        printf("%s - %s\n", my_hotel.menu[index].nameofdish, my_hotel.menu[index].priceofdish);
+        printf("%s %s %s %s\n", my_hotel.menu[index].nameofdish,my_hotel.menu[index].typeofdish,my_hotel.menu[index].categoryofdish, my_hotel.menu[index].priceofdish);
         total += atoi(my_hotel.menu[index].priceofdish);
     }
     printf("Total: %d\n", total);
