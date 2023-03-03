@@ -4,7 +4,6 @@
 #include <time.h>
 
 #define cust_order "cust_order.txt"
-#define flagfile "flag_file.txt"
 #define accept_file "accept_file.txt"
 #define Order_delivered_file "Order_delivered_file.txt"
 
@@ -35,16 +34,16 @@ struct deliveries{
     struct deliveries* next;
 };//linkedlist of all deliveries
 
-void check_file_for_changes(char* p, int o);
+void check_file_for_changes(char* p, int o);//We don't need this now
 struct food_details_list* add_food_item(struct food_details_list* food_list_head,food_details* new_item);
 struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delivery_details* new_delivery);
-struct deliveries* read_details_from_file(FILE * p);
+struct deliveries* read_details_from_file(char* fname);
 void print_delivery(delivery_details* current_delivery,FILE* p);
 delivery_details* order_accept(struct deliveries* delivery_list_head, int n, int OTP, int order_id);
 int generate_OTP(int n);
-void show_orders(struct deliveries* a);
+void show_orders(int* f);
 
-void check_file_for_changes(char* p, int o){
+void check_file_for_changes(char* p, int o){//We don't need this now
     int checkval;
     do{
         FILE* file_to_check = fopen(p,"r");
@@ -69,7 +68,6 @@ struct food_details_list* add_food_item(struct food_details_list* food_list_head
     }
     food_list_head->next = new_food_list;
     return head_copy;
-
 }
 
 struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delivery_details* new_delivery){
@@ -87,8 +85,8 @@ struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delive
     return head_copy;
 }
 
-struct deliveries* read_details_from_file(FILE * p){
-
+struct deliveries* read_details_from_file(char* fname){
+    FILE* p = fopen(fname,"r");
     struct deliveries* delivery_list_head = malloc(sizeof(struct deliveries)); 
     delivery_list_head = NULL;
     while(1){
@@ -107,6 +105,7 @@ struct deliveries* read_details_from_file(FILE * p){
         }
         delivery_list_head = add_new_delivery(delivery_list_head, a);
     }
+    fclose(p);
     return delivery_list_head;
 }
 
@@ -140,42 +139,100 @@ int generate_OTP(int a){
     return OTP;
 }
 
-void show_orders(struct deliveries* a){
-    char r[30];
+void show_orders(int* f){
+    char response[30];
+    struct deliveries* a = read_details_from_file(cust_order);
+    a = read_details_from_file(cust_order);
+
     while(1){
-        printf("\t\t\t\t\tDeliveries Available!\n\n");
-        int i = 1;
-        struct deliveries* copy = a;
-        while(copy!=NULL){
-            printf("\t\t\t\t\tOrder Number %d.\n\t\t\t\t\tRestaurant Address is %s\n\t\t\t\t\tDelivery Address is %s\n\n", i, (copy->details).r_a,(copy->details).u_a);
-            i++;
-            copy = copy->next;
-        }
-        printf("\n\n\t\t\t\t\tWhat order number do you want to accept?\n\n\t\t\t\t\tPress number to accept or 'exit' to go back:");
-        scanf("%s",r);
-        if(strcmp(r,"exit")==0||strcmp(r,"Exit")==0||strcmp(r,"EXIT")==0){
+        printf("\n\n\t\t\t\t\tDo you want to\n\n\t\t\t\t\tCheck for new orders?(Press Yes)\n\n\t\t\t\t\tOr exit the application?(Press exit)\n\n\t\t\t\t\tResponse:");
+        scanf("%s",response);
+        if(strcmp(response,"exit")==0||strcmp(response,"Exit")==0||strcmp(response,"EXIT")==0||strcmp(response,"no")==0||strcmp(response,"No")==0||strcmp(response,"NO")==0){
+            f = 0;
             system("clear");
-            break;
+            return;
         }
+        else if(strcmp(response,"yes")==0||strcmp(response,"Yes")==0||strcmp(response,"YES")==0){
+            while(1){
+                system("clear");
+                if(a==NULL){
+                    printf("\n\n\t\t\t\t\tThere are no deliveries available right now.\n\n\t\t\t\t\tDo you want to\n\n\t\t\t\t\tCheck for new orders?(Press Yes to check again.)\n\n\t\t\t\t\tOr exit the application?(Press exit)\n\n\t\t\t\t\tResponse:");
+                }
+                else{
+                    printf("\t\t\t\t\tDeliveries Available!\n\n");
+                    int i = 1;
+                    struct deliveries* copy = a;
+                    while(copy!=NULL){
+                        printf("\t\t\t\t\tOrder Number %d.\n\t\t\t\t\tRestaurant Address is %s\n\t\t\t\t\tDelivery Address is %s\n\n", i, (copy->details).r_a,(copy->details).u_a);
+                        i++;
+                        copy = copy->next;
+                    }
+                    printf("\n\n\t\t\t\t\tWhat order number do you want to accept?\n\n\t\t\t\t\tPress number to accept or 'exit' to go back:");
+                    scanf("%s",r);
+                    if(strcmp(r,"exit")==0||strcmp(r,"Exit")==0||strcmp(r,"EXIT")==0){
+                        system("clear");
+                        break;
+                    }
+                    }
+                }
+                scanf("%s",response);
+                if(strcmp(response,"exit")==0||strcmp(response,"Exit")==0||strcmp(response,"EXIT")==0||strcmp(response,"no")==0||strcmp(response,"No")==0||strcmp(response,"NO")==0){
+                    f = 0;
+                    system("clear");
+                    break;
+                }
+                else if(strcmp(response,"yes")==0||strcmp(response,"Yes")==0||strcmp(response,"YES")==0){
+                    a = read_details_from_file(cust_order);
+                }
+                else{
+                    system("clear");
+                    printf("\t\t\t\t\tInvalid Response, please try again.\n");
+                    a = read_details_from_file(cust_order);
+                }
+            }
+        }
+        else{
+            system("clear");
+            printf("\t\t\t\t\tInvalid Response, please try again.\n");
+            a = read_details_from_file(cust_order);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         else if(atoi(r)>0 && atoi(r)<=i){
             int i = 0;
-            char OTP[30];
+            char response[30];
             delivery_details* accepted_delivery = order_accept(a,atoi(r),generate_OTP(9000),generate_OTP(99000));
-            system("clear");
-            printf("\t\t\t\t\tYou have accepted an order.\n\n\t\t\t\t\tDelivery is from %s to %s.\n\t\t\t\t\tThe order id is %d.\n\t\t\t\t\tThe contact number of the customer is %s.\n", accepted_delivery->r_a, accepted_delivery->u_a, accepted_delivery->order_id, accepted_delivery->id);
-            check_file_for_changes(Order_delivered_file, 1);
-            printf("\n\n\t\t\t\t\tYou have delivered the order to %s at %s.\n\n\t\t\t\t\tAsk the %s for the OTP and enter it here to confirm your delivery:", accepted_delivery->name, accepted_delivery->u_a, accepted_delivery->name);
-            while(atoi(OTP) != accepted_delivery->OTP && i<5){
+            do{
+                system("clear");
+                printf("\t\t\t\t\tYou have accepted an order.\n\n\t\t\t\t\tDelivery is from %s to %s.\n\t\t\t\t\tThe order id is %d.\n\t\t\t\t\tThe contact number of the customer is %s.\n\n\n\t\t\t\t\tIf you have delivered the order, press Yes.\n\t\t\t\t\tResponse:", accepted_delivery->r_a, accepted_delivery->u_a, accepted_delivery->order_id, accepted_delivery->id);
+                scanf("%s",response);
+            }while(strcmp(response,"yes")||strcmp(response,"Yes")||strcmp(response,"YES"));
+            printf("\n\n\t\t\t\t\tYou have delivered the order to %s at %s.\n\n\t\t\t\t\tAsk %s for the OTP and enter it here to confirm your delivery:", accepted_delivery->name, accepted_delivery->u_a, accepted_delivery->name);
+            scanf("%s",response);
+            while(atoi(response) != accepted_delivery->OTP && i<5){
                 i++;
-                scanf("%s", OTP);
-                if(atoi(OTP) == accepted_delivery->OTP){
+                scanf("%s",response);
+                if(atoi(response) == accepted_delivery->OTP){
                     break;
                 }
                 printf("\n\n\t\t\t\t\tYou have entered the wrong OTP. Try again:");
             };
             system("clear");
             if(i==5){
-                printf("You have incorrectly entered OTP.Your delivery was not confirmed.");
+                printf("You have incorrectly entered OTP 5 times.Your delivery was not confirmed.");
             }
             else printf("\n\n\t\t\t\t\tYou delivery has been confirmed.\n\n\n\n");
             break;
@@ -183,39 +240,15 @@ void show_orders(struct deliveries* a){
         else{
             system("clear");
             printf("\t\t\t\t\tInvalid Response, please try again.\n\n\n");
+            a = read_details_from_file(cust_order);
         }
     }
 }
 
 void main(){
-    FILE* flag_file = fopen(flagfile,"r");
-    int flagval;
-    fscanf(flag_file,"%d",&flagval);
-    fclose(flag_file);
-    char r[30];
+    int f = 1;
     do{
-        system("clear");
-        while(1){
-            printf("\n\n\t\t\t\t\tDo you want to\n\n\t\t\t\t\tCheck for new orders?(Press Yes)\n\n\t\t\t\t\tOr exit the application?(Press exit)\n\n\t\t\t\t\tResponse:");
-            scanf("%s",r);
-            if(strcmp(r,"exit")==0||strcmp(r,"Exit")==0||strcmp(r,"EXIT")==0){
-                break;
-            }
-            else if(strcmp(r,"yes")==0||strcmp(r,"Yes")==0||strcmp(r,"YES")==0){
-                check_file_for_changes(flagfile, 1);
-                FILE* order_file = fopen(cust_order,"r");
-                struct deliveries* a = read_details_from_file(order_file);
-                fclose(order_file);
-                system("clear");
-                show_orders(a);
-            }
-            else{
-                system("clear");
-                printf("\t\t\t\t\tInvalid Response, please try again.\n");
-            }
-        }
-        break;
-    }while(1);
-    system("clear");
-    printf("\t\t\t\t\t\t\tThank You!\n\n\n\n");
+        show_orders(&f);
+    }while(f);
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\tThank You!\n\n\n\n\n\n\n\n\n\n\n\n");
 }
