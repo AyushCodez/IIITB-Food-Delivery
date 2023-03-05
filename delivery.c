@@ -24,7 +24,7 @@ typedef struct{
     char r_a[30]; //restaurant address
     int n;
     int OTP;
-    int order_id;
+    char order_id[10];
     struct food_details_list* foods;
 
 } delivery_details;//delivery details of one customer
@@ -43,6 +43,7 @@ void print_delivery(delivery_details* current_delivery,char* f_address);
 void show_orders(int* f);
 delivery_details* order_accept(struct deliveries* delivery_list_head, int n, int OTP, int order_id);
 int generate_OTP(int a, int b);
+char* itoa(int n);
 
 void check_file_for_changes(char* p, int o){//We don't need this now
     int checkval;
@@ -114,7 +115,7 @@ int read_number_of_deliveries(char* f_address){
     int r = 0;
     FILE* p = fopen(f_address,"r");
     while(1){
-        char name[30], id[11], u_a[30], r_a[30], order_id[7];
+        char name[30], id[11], u_a[30], r_a[30], order_id[10];
         int OTP, quantity;
         if(fscanf( p ,"%s %s %s %s %d %s", name, id, u_a, r_a, &OTP, order_id) == EOF) break;
         int n;
@@ -131,7 +132,7 @@ int read_number_of_deliveries(char* f_address){
 
 void print_delivery(delivery_details* c,char* f_address){
     FILE* p = fopen(f_address,"a");
-    fprintf(p,"%s %s %s %s %d %d\n", c->name, c->id, c->u_a, c->r_a, c->OTP, c->order_id);
+    fprintf(p,"%s %s %s %s %d %s\n", c->name, c->id, c->u_a, c->r_a, c->OTP, c->order_id);
     fprintf(p,"%d\n",c->n);
     struct food_details_list* foods = c->foods;
     while(foods!=NULL){
@@ -147,7 +148,7 @@ delivery_details* order_accept(struct deliveries* delivery_list_head, int n, int
         delivery_list_head = delivery_list_head->next;
     }
     delivery_list_head->details.OTP = OTP;
-    delivery_list_head->details.order_id = order_id;
+    strcpy(delivery_list_head->details.order_id, itoa(order_id));
     accepted_delivery = &delivery_list_head->details;
     print_delivery(accepted_delivery,accept_file);
     return accepted_delivery;
@@ -157,6 +158,38 @@ int generate_OTP(int a, int b){
     srand(time(NULL));
     int OTP = a + (rand() % (b-a));
     return OTP;
+}
+
+char* itoa(int n){
+    int len_str = 0;
+    int str_size;
+    int copy = n;
+    while(n > 0)
+    {
+        n = n / 10;
+        len_str ++;
+    }
+
+    char* str;
+
+    if(len_str <= 4){
+        str = (char*)malloc(4);
+        for(int i = 0; i < (4 - len_str); i++)
+        {
+            str[i] = '0';
+        }
+        str_size = 5;
+    }
+    else{str = (char*)malloc(len_str); str_size = len_str + 1;}
+
+    for(int i = 0; i < len_str; i++)
+    {
+        int reminder = copy % 10;
+        str[str_size - i - 2] = (char)(reminder + (int)'0');
+        copy = copy / 10;
+    }
+    str[str_size - 1] = '\0';
+    return str;
 }
 
 void show_orders(int* f){
@@ -234,7 +267,7 @@ void show_orders(int* f){
                         system("clear");
                         printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
-                        printf("\n\n\t\t\t\t\t\t\t\t  You have accepted an order.\n\n\t\t\t\t\t\t\t\t  Delivery is from %s to %s.\n\t\t\t\t\t\t\t\t  The order id is %d.\n\t\t\t\t\t\t\t\t  The contact number of the customer is %s.\n\n\n\t\t\t\t\t\t\t\t  If you have delivered the order, press Yes.\n\t\t\t\t\t\t\t\t  Response:", accepted_delivery->r_a, accepted_delivery->u_a, accepted_delivery->order_id, accepted_delivery->id);
+                        printf("\n\n\t\t\t\t\t\t\t\t  You have accepted an order.\n\n\t\t\t\t\t\t\t\t  Delivery is from %s to %s.\n\t\t\t\t\t\t\t\t  The order id is %s.\n\t\t\t\t\t\t\t\t  The contact number of the customer is %s.\n\n\n\t\t\t\t\t\t\t\t  If you have delivered the order, press Yes.\n\t\t\t\t\t\t\t\t  Response:", accepted_delivery->r_a, accepted_delivery->u_a, accepted_delivery->order_id, accepted_delivery->id);
                         scanf("%s",response);
                     }while(strcmp(response,"yes")&&strcmp(response,"Yes")&&strcmp(response,"YES"));
                     printf("\n\n\t\t\t\t\t\t\t\t  You have delivered the order to %s at %s.\n\n\t\t\t\t\t\t\t\t  Ask %s for the OTP and enter it here to confirm your delivery:", accepted_delivery->name, accepted_delivery->u_a, accepted_delivery->name);
