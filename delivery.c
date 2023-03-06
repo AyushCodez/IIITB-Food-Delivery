@@ -269,10 +269,10 @@ void show_orders(int* f){
                         system("clear");
                         printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
-                        printf("\n\n\t\t\t\t\t\t\t\t  You have accepted an order.\n\n\t\t\t\t\t\t\t\t  Delivery is from %s to %s.\n\t\t\t\t\t\t\t\t  The order id is %s.\n\t\t\t\t\t\t\t\t  The contact number of the customer is %s.\n\n\n\t\t\t\t\t\t\t\t  You have to collect %0.2f rupees from %s.\n\n\n\t\t\t\t\t\t\t\t  If you have delivered the order, press Yes.\n\t\t\t\t\t\t\t\t  Response:", accepted_delivery->r_a, accepted_delivery->u_a, accepted_delivery->order_id, accepted_delivery->id, accepted_delivery->amount, accepted_delivery->name);
+                        printf("\n\n\t\t\t\t\t\t\t\t  You have accepted an order.\n\n\t\t\t\t\t\t\t\t  Delivery is from %s to %s.\n\t\t\t\t\t\t\t\t  The order id is %s.\n\t\t\t\t\t\t\t\t  The contact number of the customer is %s.\n\n\n\t\t\t\t\t\t\t\t  If you have delivered the order, press Yes.\n\t\t\t\t\t\t\t\t  Response:", accepted_delivery->r_a, accepted_delivery->u_a, accepted_delivery->order_id, accepted_delivery->id);
                         scanf("%s",response);
                     }while(strcmp(response,"yes")&&strcmp(response,"Yes")&&strcmp(response,"YES"));
-                    printf("\n\n\t\t\t\t\t\t\t\t  You have delivered the order to %s at %s.\n\n\t\t\t\t\t\t\t\t  Ask %s for the OTP and enter it here to confirm your delivery:", accepted_delivery->name, accepted_delivery->u_a, accepted_delivery->name);
+                    printf("\n\n\t\t\t\t\t\t\t\t  You have delivered the order to %s at %s.\n\t\t\t\t\t\t\t\t  You have to collect %0.2f rupees from %s.\n\n\t\t\t\t\t\t\t\t  Ask %s for the OTP and enter it here to confirm your delivery:", accepted_delivery->name, accepted_delivery->u_a, accepted_delivery->amount, accepted_delivery->name, accepted_delivery->name);
                     while(atoi(response) != accepted_delivery->OTP && c<5){
                         scanf("%s",response);
                         if(atoi(response) == accepted_delivery->OTP){
