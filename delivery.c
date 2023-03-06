@@ -27,6 +27,7 @@ typedef struct{
     int OTP;
     char order_id[10];
     float amount;
+    float commission;
     struct food_details_list* foods;
 
 } delivery_details;//delivery details of one customer
@@ -96,7 +97,7 @@ struct deliveries* read_details_from_file(char* f_address){
     delivery_list_head = NULL;
     while(1){
         delivery_details* a = malloc(sizeof(delivery_details));
-        if(fscanf( p ,"%s %s %s %s %s %d %s %f", a->delivery_id, a->name, a->id, a->u_a, a->r_a, &a->OTP, a->order_id, &a->amount) == EOF) break;
+        if(fscanf( p ,"%s %s %s %s %s %d %s %f %f", a->delivery_id, a->name, a->id, a->u_a, a->r_a, &a->OTP, a->order_id, &a->amount, &a->commission) == EOF) break;
         int n;
         fscanf(p,"%d",&n);
         a->n = n;
@@ -120,8 +121,8 @@ int read_number_of_deliveries(char* f_address){
     while(1){
         char delivery_id[30], name[30], id[11], u_a[30], r_a[30], order_id[10];
         int OTP, quantity;
-        float amount;
-        if(fscanf( p ,"%s %s %s %s %s %d %s %f",delivery_id, name, id, u_a, r_a, &OTP, order_id, &amount) == EOF) break;
+        float amount, commission;
+        if(fscanf( p ,"%s %s %s %s %s %d %s %f %f",delivery_id, name, id, u_a, r_a, &OTP, order_id, &amount, &commission) == EOF) break;
         int n;
         fscanf(p,"%d",&n);
         while(n--){
@@ -136,7 +137,7 @@ int read_number_of_deliveries(char* f_address){
 
 void print_delivery(delivery_details* c,char* f_address){
     FILE* p = fopen(f_address,"a");
-    fprintf(p,"%s %s %s %s %s %d %s %0.2f\n", c->delivery_id, c->name, c->id, c->u_a, c->r_a, c->OTP, c->order_id, c->amount);
+    fprintf(p,"%s %s %s %s %s %d %s %0.2f %0.2f\n", c->delivery_id, c->name, c->id, c->u_a, c->r_a, c->OTP, c->order_id, c->amount, c->commission);
     fprintf(p,"%d\n",c->n);
     struct food_details_list* foods = c->foods;
     while(foods!=NULL){
@@ -300,7 +301,7 @@ void show_orders(int* f){
                         printf("\n\n\t\t\t\t\t\t\t\t  You have accepted an order.\n\n\t\t\t\t\t\t\t\t  Delivery is from %s to %s.\n\t\t\t\t\t\t\t\t  The order id is %s.\n\t\t\t\t\t\t\t\t  The contact number of the customer is %s.\n\n\n\t\t\t\t\t\t\t\t  If you have delivered the order, press Yes.\n\t\t\t\t\t\t\t\t  Response:", accepted_delivery->r_a, accepted_delivery->u_a, accepted_delivery->order_id, accepted_delivery->id);
                         scanf("%s",response);
                     }while(strcmp(response,"yes")&&strcmp(response,"Yes")&&strcmp(response,"YES"));
-                    printf("\n\n\t\t\t\t\t\t\t\t  You have delivered the order to %s at %s.\n\t\t\t\t\t\t\t\t  You have to collect %0.2f rupees from %s.\n\n\t\t\t\t\t\t\t\t  Ask %s for the OTP and enter it here to confirm your delivery:", accepted_delivery->name, accepted_delivery->u_a, accepted_delivery->amount, accepted_delivery->name, accepted_delivery->name);
+                    printf("\n\n\t\t\t\t\t\t\t\t  You have delivered the order to %s at %s.\n\t\t\t\t\t\t\t\t  You have to collect %0.2f rupees from %s.\n\n\t\t\t\t\t\t\t\t  Ask %s for the OTP and enter it here to confirm your delivery:", accepted_delivery->name, accepted_delivery->u_a, accepted_delivery->amount + accepted_delivery->commission, accepted_delivery->name, accepted_delivery->name);
                     while(atoi(response) != accepted_delivery->OTP){
                         scanf("%s",response);
                         if(atoi(response) == accepted_delivery->OTP){
