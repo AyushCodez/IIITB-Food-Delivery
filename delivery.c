@@ -5,7 +5,7 @@
 
 #define cust_order "cust_order.txt"
 #define accept_file "accept_file.txt"
-#define Order_delivered_file "Order_delivered_file.txt"
+#define delivered_file "delivered_file.txt"
 
 typedef struct{
     char name[30];//name of dish
@@ -18,6 +18,7 @@ struct food_details_list{
 };//linkedlist of individual food items
 
 typedef struct{
+    char delivery_id[20];
     char name[30];
     char id[11];
     char u_a[30]; //user address
@@ -42,7 +43,8 @@ struct deliveries* read_details_from_file(char* f_address);
 int read_number_of_deliveries(char* f_address);
 void print_delivery(delivery_details* current_delivery,char* f_address);
 void show_orders(int* f);
-delivery_details* order_accept(struct deliveries* delivery_list_head, int n, int OTP, int order_id);
+delivery_details* order_accept(struct deliveries* delivery_list_head, int n, int OTP);
+void remove_delivery_from_file(char* f_address, char* order_id);
 int generate_OTP(int a, int b);
 char* itoa(int n);
 
@@ -94,7 +96,7 @@ struct deliveries* read_details_from_file(char* f_address){
     delivery_list_head = NULL;
     while(1){
         delivery_details* a = malloc(sizeof(delivery_details));
-        if(fscanf( p ,"%s %s %s %s %f", a->name, a->id, a->u_a, a->r_a, &a->amount) == EOF) break;
+        if(fscanf( p ,"%s %s %s %s %s %d %s %f", a->delivery_id, a->name, a->id, a->u_a, a->r_a, &a->OTP, a->order_id, &a->amount) == EOF) break;
         int n;
         fscanf(p,"%d",&n);
         a->n = n;
@@ -116,10 +118,10 @@ int read_number_of_deliveries(char* f_address){
     int r = 0;
     FILE* p = fopen(f_address,"r");
     while(1){
-        char name[30], id[11], u_a[30], r_a[30], order_id[10];
+        char delivery_id[30], name[30], id[11], u_a[30], r_a[30], order_id[10];
         int OTP, quantity;
         float amount;
-        if(fscanf( p ,"%s %s %s %s %d %s %f", name, id, u_a, r_a, &OTP, order_id, &amount) == EOF) break;
+        if(fscanf( p ,"%s %s %s %s %s %d %s %f",delivery_id, name, id, u_a, r_a, &OTP, order_id, &amount) == EOF) break;
         int n;
         fscanf(p,"%d",&n);
         while(n--){
@@ -134,7 +136,7 @@ int read_number_of_deliveries(char* f_address){
 
 void print_delivery(delivery_details* c,char* f_address){
     FILE* p = fopen(f_address,"a");
-    fprintf(p,"%s %s %s %s %d %s %0.2f\n", c->name, c->id, c->u_a, c->r_a, c->OTP, c->order_id, c->amount);
+    fprintf(p,"%s %s %s %s %s %d %s %0.2f\n", c->delivery_id, c->name, c->id, c->u_a, c->r_a, c->OTP, c->order_id, c->amount);
     fprintf(p,"%d\n",c->n);
     struct food_details_list* foods = c->foods;
     while(foods!=NULL){
@@ -144,16 +146,42 @@ void print_delivery(delivery_details* c,char* f_address){
     fclose(p);
 }
 
-delivery_details* order_accept(struct deliveries* delivery_list_head, int n, int OTP, int order_id){
+delivery_details* order_accept(struct deliveries* delivery_list_head, int n, int OTP){
     delivery_details* accepted_delivery = malloc(sizeof(delivery_details));
     for(int i = 1; i < n; i++){
         delivery_list_head = delivery_list_head->next;
     }
     delivery_list_head->details.OTP = OTP;
-    strcpy(delivery_list_head->details.order_id, itoa(order_id));
     accepted_delivery = &delivery_list_head->details;
     print_delivery(accepted_delivery,accept_file);
     return accepted_delivery;
+}
+
+void remove_delivery_from_file(char* f_address, char* order_id){
+    struct deliveries* a = read_details_from_file(f_address);
+    FILE* file = fopen(f_address, "w");
+    fclose(file);
+    if(a == NULL)
+        return;
+    struct deliveries* b = a->next;
+    if(strcmp(a->details.order_id,order_id)==0){
+        a = b;
+    }
+    else{
+        do{
+        print_delivery(&a->details, f_address);
+        a = a->next;
+        b = b->next;
+        if(b == NULL)
+            return;
+        }while(strcmp(a->details.order_id,order_id));
+        a = a->next;
+    }
+    while(a!=NULL){
+        print_delivery(&a->details, f_address);
+        a = a->next;
+    }
+
 }
 
 int generate_OTP(int a, int b){
@@ -264,7 +292,7 @@ void show_orders(int* f){
                 else if(atoi(response)>0 && atoi(response)<=i){
                     int c = 0;
                     int num_delivered = read_number_of_deliveries(accept_file);
-                    delivery_details* accepted_delivery = order_accept(a,atoi(response),generate_OTP(1000,10000),num_delivered+1);
+                    delivery_details* accepted_delivery = order_accept(a,atoi(response),generate_OTP(1000,10000));
                     do{
                         system("clear");
                         printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
@@ -273,24 +301,20 @@ void show_orders(int* f){
                         scanf("%s",response);
                     }while(strcmp(response,"yes")&&strcmp(response,"Yes")&&strcmp(response,"YES"));
                     printf("\n\n\t\t\t\t\t\t\t\t  You have delivered the order to %s at %s.\n\t\t\t\t\t\t\t\t  You have to collect %0.2f rupees from %s.\n\n\t\t\t\t\t\t\t\t  Ask %s for the OTP and enter it here to confirm your delivery:", accepted_delivery->name, accepted_delivery->u_a, accepted_delivery->amount, accepted_delivery->name, accepted_delivery->name);
-                    while(atoi(response) != accepted_delivery->OTP && c<5){
+                    while(atoi(response) != accepted_delivery->OTP){
                         scanf("%s",response);
                         if(atoi(response) == accepted_delivery->OTP){
                             break;
                         }
                         c++;
-                        if(c!=5)
-                            printf("\n\n\t\t\t\t\t\t\t\t  You have entered the wrong OTP %d %s. Try again:", c, c==1?"time":"times");
+                        printf("\n\n\t\t\t\t\t\t\t\t  You have entered the wrong OTP %d %s. Try again:", c, c==1?"time":"times");
                     };
                     system("clear");
                     printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                     for(int i=0;i<173;i++) printf("_");printf("\n");
-                    if(c==5){
-                        printf("\n\n\t\t\t\t\t\t\t\t  You have incorrectly entered OTP 5 times.Your delivery was not confirmed.\n\n");
-                    }
-                    else{
-                        printf("\n\n\t\t\t\t\t\t\t\t  You delivery has been confirmed.\n\n\n\n");
-                    }
+                    printf("\n\n\t\t\t\t\t\t\t\t  You delivery has been confirmed.\n\n\n\n");
+                    remove_delivery_from_file(accept_file, accepted_delivery->order_id);
+                    print_delivery(accepted_delivery, delivered_file);
                     break;
                 }
                 else{
