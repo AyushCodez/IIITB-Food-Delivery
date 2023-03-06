@@ -1,13 +1,13 @@
-Owais 8296177123 B-216 Savoury_Seashells
+Owais 8296177123 B-216 Savoury_Seashells 2400.00
 4
 Grill_Chicken 1
 Butter_Naan 2
 Dal_tadka 1
 Ghee_Rice 1
-Sarvesh 9876543210 B-227 Any_chicken_restaurant
+Sarvesh 9876543210 B-227 Any_chicken_restaurant 2000.00
 1
 Any_chicken_dish 5
-Samyak 9123456789 B-232 Gramin
+Samyak 9123456789 B-232 Gramin 1800.00
 3
 Paneer_Tikka 1
 Tandoori_Roti 3
