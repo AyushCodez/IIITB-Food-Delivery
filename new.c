@@ -66,12 +66,14 @@ int main(){
                 break;
             }
         }
-        for(int i=0;i<100;i++){
+        /*for(int i=0;i<100;i++){
             if(strcmp(r[cadd-1].d[i].nameofdish,"") == 0){
                 counter = i;
                 break;
             }
         }
+        printf("%d %d\n",cadd,counter);*/
+        counter=0;
         printf("Name of the restaurant");
         scanf("%s",r[cadd].name);
         printf("Address of the restaurant");
