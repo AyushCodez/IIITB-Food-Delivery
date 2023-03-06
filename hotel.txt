@@ -1,0 +1,15 @@
+Rest1
+Bangalore,K
+300
+234567890
+4
+2
+Dish5 Veg Tiffin 20
+Dish2 Veg Tiffin 30
+Rest2
+Bangalore,K
+200
+234567891
+5
+1
+Dish1 Veg Tiffin 40

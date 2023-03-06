@@ -6,13 +6,15 @@
 struct Dishes
 {
     char nameofdish[30]; 
-    char typeofdish[20]; //whether it is a softdrink / fastfood / beverage / bread / gravy ....
-    char categoryofdish[20]; //whether it is veg/non-veg/jain
+    char typeofdish[20]; //whether it is veg/non-veg/jain
+    char categoryofdish[20]; //whether it is beverage/fastfood...
     char priceofdish[10];
 };
 
 int main(){
     FILE *fptr; 
+    int flag=0;
+    int *ptr=&flag;
     int cadd=0; //Acts as a counter to keep track of the length of the array
 	fptr = fopen("dish_file", "r");
     struct Dishes d[100];
@@ -44,12 +46,28 @@ int main(){
         fclose(fptr);
         printf("Name of the dish");
         scanf("%s",d[cadd].nameofdish);
+        int flag=0;
+        for(int i=0;i<cadd;i++){
+            if (strcmp(d[cadd].nameofdish,d[i].nameofdish)==0){
+                printf("Dish already exists\n");
+                strcpy(d[cadd].nameofdish,' ');
+                flag=1;
+            }
+        }
+        if (flag==0){
         printf("Type of the dish");
         scanf("%s",d[cadd].typeofdish);
         printf("Category of the dish");
         scanf("%s",d[cadd].categoryofdish);
         printf("Price of the dish");
-        scanf("%s",d[cadd].priceofdish);
+        scanf("%s",d[cadd].priceofdish);           
+        }
+        else if(flag==1){
+            printf("These are the dishes available in your restaurant\n");
+            for (int i = 0; i < cadd; i++){
+                printf("%s\n",d[i].nameofdish);
+            }            
+        }
     }
     else if(strcmp(input,"2")==0){ //update dish price in the menu
         fptr = fopen("dish_file", "r");
@@ -95,8 +113,8 @@ int main(){
             }
         }
         fclose(fptr);
+        //printf("%d",cadd);
         char dishname[100];
-        int flag=0;
         printf("Enter dish name\n");
         scanf("%s",dishname);
         for(int i=0;i<cadd;i++){
@@ -105,11 +123,11 @@ int main(){
                     d[j]=d[j+1];
                 }
                 cadd=cadd-1;
-                flag=1;
+                *ptr=1;
                 break;
             }
         }
-        if (flag==0){
+        if (*ptr==0){
             printf("dish name don't match\n");
             printf("These are the dishes available in your restaurant\n");
             for (int i = 0; i < cadd; i++){
@@ -117,11 +135,18 @@ int main(){
             }
         }
     }
+    else{
+        printf("Wronginput");
+        printf("\n");
+    }
     for(int i=0;i<100;i++){
         if(strcmp(d[i].nameofdish,"") == 0){
             cadd = i;
             break;
         }
+    }
+    if(strcmp(input,"3")==0 && *ptr==1) {
+        cadd=cadd-1;
     }
     fptr=fopen("dish_file","w");
     for(int i=0;i<cadd;i++){
