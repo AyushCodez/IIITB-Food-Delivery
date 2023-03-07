@@ -52,8 +52,8 @@ int char_to_int(char* num_str){
 }
 
 void heading(char title[]){ // heading
-		printf("\t\t\t\t\t\t\t\t\t\t\t:  : : :::%s",title);printf("::: : :  :\n");
-		for(int i=0;i<210;i++) printf("_");
+		printf("\t\t\t\t\t\t\t\t  :  : : :::%s",title);printf("::: : :  :\n");
+		for(int i=0;i<173;i++) printf("_");
 		printf("\n");
 }
 
@@ -159,61 +159,17 @@ void create_profile(){
 void login_Wrong(){
     char Username[20];
     char Pwd[10];
-    char option;
+    char option[10];
         system("clear");
     heading("Welcome to delivery page");
-    printf("Wrong Password - Press 'l' to login OR Press 'c' to create new account: ");
-    scanf("%c", &option);
-    if(option == 'c'){
+    printf("Wrong Password:\n\nPress 'Login' to login\nPress 'Create' to create new account: ");
+    scanf("%s", option);
+    printf("\n");
+    if(strcmp(option,"create")==0||strcmp(option,"Create")==0||strcmp(option,"CREATE")==0){
         create_profile();
         return ;
     }
-    else if(option == 'l'){
-        printf("Please enter your Name (Please donot use ' '(spaces) and maximum length 20): ");
-        scanf("%s", Username);
-        printf("\n");
-        printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
-        scanf("%s", Pwd);
-        printf("\n");
-        if(check_if_aldready_exists(Username)){
-            if(strcmp(retrieve_password(Username), Pwd) == 0){ 
-                printf("Logged in\n");//Owais's Function
-
-                return ;
-            }
-            else{
-                login_Wrong();
-                return ;
-            }
-        }
-        else{
-            printf("You are Not Registered, invalid Username!!\nPress any Key to continue: ");
-            char dummy;
-            scanf("%c", &dummy);
-            scanf("%c", &dummy);
-            printf("%c", dummy);
-            login();
-        }
-    }
-    else{
-        printf("Invalid Input");
-        login();
-    }    
-}
-
-void login(){
-    char Username[20];
-    char Pwd[10];
-    char option;
-        system("clear");
-    heading("Welcome to delivery page");
-    printf("Press 'l' to login OR Press 'c' to create new account: ");
-    scanf("%c", &option);
-    if(option == 'c'){
-        create_profile();
-        return ;
-    }
-    else if(option == 'l'){
+    else if(strcmp(option,"login")==0||strcmp(option,"Login")==0||strcmp(option,"LOGIN")==0){
         printf("Please enter your Name (Please donot use ' '(spaces) and maximum length 20): ");
         scanf("%s", Username);
         printf("\n");
@@ -241,7 +197,53 @@ void login(){
         }
     }
     else{
-        printf("Invalid Input");
+        printf("Invalid Input\n\n");
+        login();
+    }    
+}
+
+void login(){
+    char Username[20];
+    char Pwd[10];
+    char option[10];
+        system("clear");
+    heading("Welcome to delivery page");
+    printf("Press 'Login' to login\nPress 'Create' to create new account: ");
+    scanf("%s", option);
+    printf("\n");
+    if(strcmp(option,"create")==0||strcmp(option,"Create")==0||strcmp(option,"CREATE")==0){
+        create_profile();
+        return ;
+    }
+    else if(strcmp(option,"login")==0||strcmp(option,"Login")==0||strcmp(option,"LOGIN")==0){
+        printf("Please enter your Name (Please donot use ' '(spaces) and maximum length 20): ");
+        scanf("%s", Username);
+        printf("\n");
+        printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
+        scanf("%s", Pwd);
+        printf("\n");
+        if(check_if_aldready_exists(Username)){
+            if(strcmp(retrieve_password(Username), Pwd) == 0){ 
+                printf("Logged in\n");//Owais's Function
+                delivery_main(Username);
+                return ;
+            }
+            else{
+                login_Wrong();
+                return ;
+            }
+        }
+        else{
+            printf("You are Not Registered, invalid Username!!\nPress any Key to continue: ");
+            char dummy;
+            scanf("%c", &dummy);
+            scanf("%c", &dummy);
+            printf("%c", dummy);
+            login();
+        }
+    }
+    else{
+        printf("Invalid Input\n\n");
         login();
     }    
 }
