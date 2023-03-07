@@ -126,7 +126,7 @@ void print_delivery(delivery_details c,FILE * p){
     fprintf(p,"Delivery ID:%s\nRestaurant Address:%s\nOTP(0 if not assigned):%d\nOrder ID:%s\nPrice:%0.2f\n", c.delivery_id, c.r_a, c.OTP, c.order_id, c.amount + c.commission);
     fprintf(p,"%d\n",c.n);
     struct food_details_list* foods = c.foods;
-    printf("Order Details:\nITEM | Quantity");
+    printf("Order Details:\nITEM | Quantity\n");
     while(foods!=NULL){
         fprintf(p,"%s %d\n",(foods->details).name, (foods->details).quantity);
         foods = foods->next;
