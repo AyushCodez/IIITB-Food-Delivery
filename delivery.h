@@ -37,6 +37,12 @@ struct deliveries{
     struct deliveries* next;
 };//linkedlist of all deliveries
 
+struct delivery_guys{
+    char name[30];
+    float commission;
+    struct delivery_guys* next;
+};
+
 void check_file_for_changes(char* p, int o);//We don't need this now
 struct food_details_list* add_food_item(struct food_details_list* food_list_head,food_details* new_item);
 struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delivery_details* new_delivery);
@@ -184,7 +190,6 @@ void remove_delivery_from_file(char* f_address, char* order_id){
         print_delivery(&a->details, f_address);
         a = a->next;
     }
-
 }
 
 int generate_OTP(int a, int b){
@@ -227,49 +232,47 @@ char* itoa(int n){
 
 void show_orders(int* f, char* deliverer_name){
     char response[30];
-    struct deliveries* a = read_details_from_file(cust_order);
-
     while(1){
         printf("\n\n\t\t\t\t\t\t\t\t  Do you want to\n\n\t\t\t\t\t\t\t\t  Check for new orders?(Press Yes)\n\t\t\t\t\t\t\t\t  Or exit the application?(Press exit)\n\n\t\t\t\t\t\t\t\t  Response:");
         scanf("%s",response);
         if(strcmp(response,"exit")==0||strcmp(response,"Exit")==0||strcmp(response,"EXIT")==0||strcmp(response,"no")==0||strcmp(response,"No")==0||strcmp(response,"NO")==0){
             *f = 0;
-            system("clear");
+            //system("clear");
             printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
             for(int i=0;i<173;i++) printf("_");printf("\n");
             return;
         }
         else if(strcmp(response,"yes")==0||strcmp(response,"Yes")==0||strcmp(response,"YES")==0){
-            a = read_details_from_file(cust_order);
+            struct deliveries* a = read_details_from_file(cust_order);
             while(1){
-                system("clear");
+                //system("clear");
                 printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                 for(int i=0;i<173;i++) printf("_");printf("\n");
                 while(a==NULL){
-                    system("clear");
+                    //system("clear");
                     printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                     for(int i=0;i<173;i++) printf("_");printf("\n");
                     printf("\n\n\t\t\t\t\t\t\t\t  There are no deliveries available right now.\n\n\t\t\t\t\t\t\t\t  Do you want to\n\n\t\t\t\t\t\t\t\t  Check for new orders?(Press Yes to check again.)\n\t\t\t\t\t\t\t\t  Or exit the application?(Press exit)\n\n\t\t\t\t\t\t\t\t  Response:");
                     scanf("%s",response);
                     if(strcmp(response,"exit")==0||strcmp(response,"Exit")==0||strcmp(response,"EXIT")==0||strcmp(response,"no")==0||strcmp(response,"No")==0||strcmp(response,"NO")==0){
                         *f = 0;
-                        system("clear");
+                        //system("clear");
                         printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
                         return;
                     }
                     else if(strcmp(response,"yes")==0||strcmp(response,"Yes")==0||strcmp(response,"YES")==0){
                         a = read_details_from_file(cust_order);
-                        system("clear");
+                        //system("clear");
                         printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
                     }
                     else{
-                        system("clear");
+                        //system("clear");
                         printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
                         printf("\n\t\t\t\t\t\t\t\t  Invalid Response, please try again.\n");
-                        break;
+                        return;
                     }
                 }
                 printf("\n\n\t\t\t\t\t\t\t\t  Deliveries Available!\n\n");
@@ -282,13 +285,12 @@ void show_orders(int* f, char* deliverer_name){
                 }
                 printf("\n\n\t\t\t\t\t\t\t\t  Which order do you want to accept?\n\t\t\t\t\t\t\t\t  Press order number to accept it or press 'exit' to go back:");
                 scanf("%s",response);
-                system("clear");
-                printf("Got till here\n\n");
+                //system("clear");
                 printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                 for(int i=0;i<173;i++) printf("_");printf("\n");
                 if(strcmp(response,"exit")==0||strcmp(response,"Exit")==0||strcmp(response,"EXIT")==0||strcmp(response,"no")==0||strcmp(response,"No")==0||strcmp(response,"NO")==0){
                     *f = 0;
-                    system("clear");
+                    //system("clear");
                     printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                     for(int i=0;i<173;i++) printf("_");printf("\n");
                     return;
@@ -297,8 +299,9 @@ void show_orders(int* f, char* deliverer_name){
                     int c = 0;
                     int num_delivered = read_number_of_deliveries(accept_file);
                     delivery_details* accepted_delivery = order_accept(a,atoi(response),generate_OTP(1000,10000),deliverer_name);
+                    remove_delivery_from_file(cust_order, accepted_delivery->order_id);
                     do{
-                        system("clear");
+                        //system("clear");
                         printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
                         printf("\n\n\t\t\t\t\t\t\t\t  You have accepted an order.\n\n\t\t\t\t\t\t\t\t  Delivery is from %s to %s.\n\t\t\t\t\t\t\t\t  The order id is %s.\n\t\t\t\t\t\t\t\t  The contact number of the customer is %s.\n\n\n\t\t\t\t\t\t\t\t  If you have delivered the order, press Yes.\n\t\t\t\t\t\t\t\t  Response:", accepted_delivery->r_a, accepted_delivery->u_a, accepted_delivery->order_id, accepted_delivery->id);
@@ -313,25 +316,25 @@ void show_orders(int* f, char* deliverer_name){
                         c++;
                         printf("\n\n\t\t\t\t\t\t\t\t  You have entered the wrong OTP %d %s. Try again:", c, c==1?"time":"times");
                     };
-                    system("clear");
+                    //system("clear");
                     printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                     for(int i=0;i<173;i++) printf("_");printf("\n");
-                    printf("\n\n\t\t\t\t\t\t\t\t  You delivery has been confirmed.\n\n\n\n");
+                    printf("\n\n\t\t\t\t\t\t\t\t  You delivery has been confirmed.\n\t\t\t\t\t\t\t\t  You have earned %0.2f rupees.\n\n\n\n", accepted_delivery->commission);
                     remove_delivery_from_file(accept_file, accepted_delivery->order_id);
                     print_delivery(accepted_delivery, delivered_file);
                     break;
                 }
                 else{
-                    system("clear");
+                    //system("clear");
                     printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
                     for(int i=0;i<173;i++) printf("_");printf("\n");
                     printf("\n\t\t\t\t\t\t\t\t  Invalid Response, please try again.\n");
-                    return;
+                    break;
                 }
             }
         }
         else{
-            system("clear");
+            //system("clear");
             printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
             for(int i=0;i<173;i++) printf("_");printf("\n");
             printf("\n\t\t\t\t\t\t\t\t  Invalid Response, please try again.\n");
@@ -342,7 +345,7 @@ void show_orders(int* f, char* deliverer_name){
 
 void delivery_main(char* deliverer_name){
     int f = 1;
-    system("clear");
+    //system("clear");
     printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
     for(int i=0;i<173;i++) printf("_");printf("\n");
     do{
