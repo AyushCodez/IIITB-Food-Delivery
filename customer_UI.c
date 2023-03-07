@@ -2,6 +2,9 @@
 #include<stdlib.h>
 #include<string.h>
 #include<time.h>
+#include "customer_order.c"
+#include "customer_past.c"
+
 #define cst_det "cust_det.txt" // MACRO for file cust_det.txt which contains customer details in format <username> <password> <name> <address> <phone> <money_in_wallet>
 char current_cust[261];
 char name[21]; char phone[11]; char username[11]; char password[11]; char address[201]; 
@@ -23,6 +26,36 @@ int func(struct current_customer *cust){
 	//...defined by Ayush
 	printf("received the object of cutsomer %s",cust->nm);
 	return 0;
+}
+int update_wallet(float amt){ // returns 1 if wallet updated, else return 0 if wallet balance is insufficeint
+	char updated_customer_data[261];
+	char mny[50];
+	char delimiter[]=" "; char new_line[]="\n";
+	if(money_in_acc < amt) return 0;
+	else{
+		money_in_acc-=amt;
+		strcpy(updated_customer_data,username);
+		strcat(updated_customer_data,delimiter);strcat(updated_customer_data,password);
+		strcat(updated_customer_data,delimiter);strcat(updated_customer_data,name);
+		strcat(updated_customer_data,delimiter);strcat(updated_customer_data,address);
+		strcat(updated_customer_data,delimiter);strcat(updated_customer_data,phone);
+		sprintf(mny,"%lf",money_in_acc);
+		strcat(updated_customer_data,delimiter);strcat(updated_customer_data,mny);
+		strcat(updated_customer_data,delimiter);strcat(updated_customer_data,new_line);
+		char linear_data[261];
+		FILE * ptr_w=fopen("cust_det2.txt","w");
+		FILE * ptr_r=fopen(cst_det,"r");
+		while(fgets(linear_data,261,ptr_r)!=NULL){
+			if(strcmp(linear_data,current_cust)!=0) fputs(linear_data,ptr_w);
+			else fputs(updated_customer_data,ptr_w);
+		}
+		fclose(ptr_w);
+		fclose(ptr_r);
+		remove("cust_det.txt");
+		rename("cust_det2.txt","cust_det.txt");
+		strcpy(current_cust,updated_customer_data);
+		return 1;
+	}
 }
 int check_ph_num(char ph[]){ // returns 1 if ph is valid 10 digit phone number else 0
 	if(strlen(ph)!=10) return 0;
@@ -180,7 +213,6 @@ int sign_up(){
 		strcat(us,delimiter);strcat(us,money);
 		strcat(us,delimiter);strcat(us,new_line);
 		strcat(us,delimiter);
-		strcat(us,ps);
 		FILE * ptr=fopen(cst_det,"r");
 		while(fgets(row,100,ptr)!=NULL){
 			sscanf(row,"%s %s",u,p);
@@ -253,6 +285,8 @@ void login_customer()
 	printf("\n\t\t\t\t\t\t\t\t\t\t\t u : Update Profile:");
 	printf("\n\t\t\t\t\t\t\t\t\t\t\t a : Add money to your wallet:");
 	printf("\n\t\t\t\t\t\t\t\t\t\t\t o : Start Ordering:");
+	printf("\n\t\t\t\t\t\t\t\t\t\t\t p : See Past Orders:");
+	printf("\n\t\t\t\t\t\t\t\t\t\t\t Enter anything else to exit");
 	char opt[]="nil"; // option that the user chooses after seeing the profile
 	scanf("%s",opt);
 		if(strcmp(opt,"<")==0){
@@ -286,14 +320,20 @@ void login_customer()
 			goto pro;
 		}
 		else if(strcmp(opt,"o")==0){
-		       cc c1;
+		       cc_new c1;
 		       strcpy(c1.nm,name);
 			   strcpy(c1.ph,phone);
 			   strcpy(c1.ad,address);
 			   strcpy(c1.us,username);
 			   strcpy(c1.ps,password);
 			   c1.mny=money_in_acc; // if true then control will return to main  function were  one can resume following process
-			   func(&c1);
+			   float price = main_order(c1);
+			   update_wallet(price);
+			   goto pro;
+		}
+		else if(strcmp(opt,"p")==0){
+		       main_past(name);
+			   goto pro;
 		}
 		else exit(0);
 }
