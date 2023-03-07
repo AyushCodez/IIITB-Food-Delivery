@@ -138,7 +138,7 @@ void create_profile(){
     printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
     scanf("%s", Pwd);
     strcat(Pwd,"\0");
-    if(check_if_aldready_exists(Username)){
+    if(check_if_already_exists(Username)){
         printf("Already Exists!! press any key to continue\n");
         char dummy;
         scanf("%c", &dummy);

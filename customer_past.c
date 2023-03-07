@@ -1,3 +1,5 @@
+//Whole file written by Ayush Gupta and Samyak Jain
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

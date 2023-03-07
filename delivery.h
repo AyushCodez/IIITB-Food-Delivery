@@ -1,3 +1,4 @@
+//whole file done by Mohammad Owais
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
