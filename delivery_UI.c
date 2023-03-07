@@ -7,6 +7,7 @@
 
 void login();
 
+//CONVERTS a given int to Char*
 char* int_to_char_converter(int n){
     int len_str = 0;
     int str_size;
@@ -40,6 +41,7 @@ char* int_to_char_converter(int n){
     return str;
 }
 
+//Coverts String to Int
 int char_to_int(char* num_str){
     int n;
     int power = strlen(num_str) - 1;
@@ -51,13 +53,15 @@ int char_to_int(char* num_str){
     return (int)n;
 }
 
+//Heading creater
 void heading(char title[]){ // heading
 		printf("\t\t\t\t\t\t\t\t  :  : : :::%s",title);printf("::: : :  :\n");
 		for(int i=0;i<173;i++) printf("_");
 		printf("\n");
 }
 
-int check_if_aldready_exists(char* input){
+//Checks if a user is already exists in the file
+int check_if_already_exists(char* input){
     FILE* f_ptr = fopen("deliv.txt","r");
     //printf("Hi\n");
     char name[20];
@@ -67,7 +71,6 @@ int check_if_aldready_exists(char* input){
     while(fscanf(f_ptr,"%s %s %s %d", name, phone_num, pswd, &User_id) != EOF){//printf("HI\n");
         if(strcmp(input, name) == 0)
         {
-            //printf("HELLO\n");
             return 1;
         }
     }
@@ -75,6 +78,7 @@ int check_if_aldready_exists(char* input){
     return 0;
 }
 
+//Gives the password of a given user
 char* retrieve_password(char* input){
     FILE* f_ptr = fopen("deliv.txt","r");
     char* name; name = (char*)malloc(20);
@@ -92,13 +96,13 @@ char* retrieve_password(char* input){
     return NULL;
 }
 
+//Retrives the last user id inorder to generate new ones
 int current_user_id(){
     FILE* fptr = fopen("deliv.txt","r");
     char name[20];
     char phone_num[10];
     char pswd[10];
     int User_id;
-    //previous_values;
     char prev_name[20];
     char prev_phone_num[10];
     char prev_pswd[10];
@@ -111,6 +115,7 @@ int current_user_id(){
     return prev_id;
 }
 
+//Creates a new Profile
 void create_profile(){
     char Username[20];
     char Phone_number[11];
@@ -130,13 +135,11 @@ void create_profile(){
         scanf("%s", Phone_number);
         strcat(Phone_number,"\0");
     }
-    printf("%s\n", Phone_number);
     printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
     scanf("%s", Pwd);
     strcat(Pwd,"\0");
-    printf("%s\n", Phone_number);
     if(check_if_aldready_exists(Username)){
-        printf("Aldready Exists!! press any key to continue\n");
+        printf("Already Exists!! press any key to continue\n");
         char dummy;
         scanf("%c", &dummy);
         scanf("%c", &dummy);
@@ -156,6 +159,7 @@ void create_profile(){
     login();
 }
 
+//Show the incorrect login error
 void login_Wrong(){
     char Username[20];
     char Pwd[10];
@@ -176,7 +180,7 @@ void login_Wrong(){
         printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
         scanf("%s", Pwd);
         printf("\n");
-        if(check_if_aldready_exists(Username)){
+        if(check_if_already_exists(Username)){
             if(strcmp(retrieve_password(Username), Pwd) == 0){ 
                 printf("Logged in\n");//Owais's Function
                 delivery_main(Username);
@@ -202,6 +206,7 @@ void login_Wrong(){
     }    
 }
 
+//Shows the ogin UI
 void login(){
     char Username[20];
     char Pwd[10];
@@ -222,7 +227,7 @@ void login(){
         printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
         scanf("%s", Pwd);
         printf("\n");
-        if(check_if_aldready_exists(Username)){
+        if(check_if_already_exists(Username)){
             if(strcmp(retrieve_password(Username), Pwd) == 0){ 
                 printf("Logged in\n");//Owais's Function
                 delivery_main(Username);
