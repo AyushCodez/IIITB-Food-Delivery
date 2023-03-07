@@ -10,7 +10,7 @@ double money_in_acc=0.0; // THIS IS THE MONEY IN THE ACCOUNT OF THE LOGGED IN US
 char pre_msg_add_mny[50]="nil";
 char pre_msg_prof[30]="nil";
 char pre_msg_lgn[50]="nil"; // pre_msg_lgn --> message that has to be displeyed just after login hedaing
-char pre_msg_sgnup[80]="nil"; // resp_sgnup --> message to be displayed just after signup heading
+char pre_msg_sgnup[25]="nil"; // resp_sgnup --> message to be displayed just after signup heading
 char pre_msg_updtprof[25]="nil";
 //------------------>
 int check_ph_num(char ph[]){ // returns 1 if ph is valid 10 digit phone number else 0
@@ -143,10 +143,9 @@ int username_pass(char * pre_msg){
 int sign_up(){
 		system("clear");
 		heading("SIGN-UP");
-		char row[261]; char u[11],p[11];
-		char us_ps[22];
+		char resp_sgnup[25]="Invalid Phone Number";
 		char name[21];char ph[11];char us[261];char ps[11];char address[201];char money[]="0.0";
-	    char new_line[]="\n";char delimiter[]=" ";
+	       	char new_line[]="\n";char delimiter[]=" ";
 		if(strcmp(pre_msg_sgnup,"nil")!=0){
 			printf("\t\t\t\t\t\t\t\t\t\t\t   %s\n",pre_msg_sgnup);
 			for(int i=0;i<210;i++) printf("-");
@@ -156,33 +155,18 @@ int sign_up(){
 		printf("\t\t\t\t\t\t\t\tAddress(200 characters max,no space allowed) :"); scanf("%s",address);
 		printf("\t\t\t\t\t\t\t\tPhone(10 digit valid number,no space allowed):"); scanf("%s",ph);
 		if (check_ph_num(ph)==0){
-			strcpy(pre_msg_sgnup,"Invalid Phone Number");
+			strcpy(pre_msg_sgnup,resp_sgnup);
 			return 0;
 		}
 		printf("\t\t\t\t\t\t\t\tUsername(10 characters max,no space allowed) :"); scanf("%s",us);
 		printf("\t\t\t\t\t\t\t\tPassword(10 charcters max,no space allowed) :");  scanf("%s",ps);
 		strcat(us,delimiter);strcat(us,ps);
-		strcpy(us_ps,us);
-		strcat(us,delimiter);strcat(us,name); 
+		strcat(us,delimiter);strcat(us,name);
 		strcat(us,delimiter);strcat(us,address);
 		strcat(us,delimiter);strcat(us,ph);
 		strcat(us,delimiter);strcat(us,money);
 		strcat(us,delimiter);strcat(us,new_line);
-		strcat(us,delimiter);
-		strcat(us,ps);
-		FILE * ptr=fopen(cst_det,"r");
-		while(fgets(row,100,ptr)!=NULL){
-			sscanf(row,"%s %s",u,p);
-			strcat(u,delimiter);
-			strcat(u,p);
-			if(check_usrnm_pass(us_ps,u)==1){
-				fclose(ptr);
-				strcpy(pre_msg_sgnup,"      Sorry,\n\t\t\t\t\t\t\t\t\t\tSame username/password has been already used");
-				return 0;
-				};
-		}
-		fclose(ptr);
-		ptr= fopen(cst_det,"a+");
+		FILE * ptr= fopen(cst_det,"a+");
 		fputs(us,ptr);
 		fclose(ptr);
 		strcpy(pre_msg_lgn,"\t   Sign up successful!");
