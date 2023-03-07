@@ -31,7 +31,7 @@ int main(){
         fscanf(fptr,"%s",r[i].address);
         fscanf(fptr,"%f",&r[i].dist);
         fscanf(fptr,"%s",r[i].contact);
-        fscanf(fptr,"%d", &r[i].num_dishes);
+        fscanf(fptr,"%d",&r[i].num_dishes);
         for(int j = 0;j < r[i].num_dishes;j++){
             fscanf(fptr,"%s %s %s %s",r[i].d[j].nameofdish, r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
         }
@@ -70,6 +70,15 @@ int main(){
         counter=0;
         printf("Name of the restaurant");
         scanf("%s",r[cadd].name);
+        int flag=0;
+        for(int i=0;i<cadd;i++){
+            if (strcmp(r[cadd].name,r[i].name)==0){
+                printf("Restaurant already exists\n");
+                strcpy(r[cadd].name,' ');
+                flag=1;
+            }
+        }
+        if (flag==0){
         printf("Address of the restaurant");
         scanf("%s",r[cadd].address);
         printf("Distance of the restaurant from IIITB(enter in km)");
@@ -107,6 +116,14 @@ int main(){
             printf("Enter price of dish");
             scanf("%s",r[cadd].d[counter].priceofdish);  
         }
+        }
+        else if(flag==1){
+            printf("These are the restaurants available \n");
+            for (int i = 0; i < cadd; i++){
+                printf("%s\n",r[i].name);
+            }            
+        }
+
     }
     else if (strcmp(input,"2")==0){ //to update restauarnt (except food details)
         fptr = fopen("new_file", "r");
@@ -192,6 +209,9 @@ int main(){
                 printf("%s\n",r[i].name);
             }
         }
+    }
+    else{
+        printf("Wrong Input\n");
     }
         for(int i=0;i<100;i++){
             if(strcmp(r[i].name,"") == 0){
