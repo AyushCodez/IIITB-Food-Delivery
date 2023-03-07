@@ -2,8 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 
-struct Dishes
-{
+struct Dishes{
     char nameofdish[30]; 
     char typeofdish[20]; //whether it is veg/non-veg/jain
     char categoryofdish[20]; //whether it is beverage/fastfood...
@@ -20,6 +19,8 @@ struct rest{
 };
 
 int main(){
+    int flag=0;
+    int*ptr=&flag;
     int cadd=0; //counter for no.of restaurants
     int counter=0; //counter for no.of dishes 
     FILE *fptr;
@@ -107,11 +108,99 @@ int main(){
             scanf("%s",r[cadd].d[counter].priceofdish);  
         }
     }
+    else if (strcmp(input,"2")==0){ //to update restauarnt (except food details)
+        fptr = fopen("new_file", "r");
+        for(int i  = 0;i<100;i++){
+            fscanf(fptr,"%s",r[i].name);
+            fscanf(fptr,"%s",r[i].address);
+            fscanf(fptr,"%f",&r[i].dist);
+            fscanf(fptr,"%s",r[i].contact);
+            fscanf(fptr,"%d", &r[i].num_dishes);
+            for(int j = 0;j < 1;j++){
+                fscanf(fptr,"%s %s %s %s",r[i].d[j].nameofdish, r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
+            }
+        }
+        fclose(fptr);
         for(int i=0;i<100;i++){
             if(strcmp(r[i].name,"") == 0){
                 cadd = i; //counter for no.of restaurants
                 break;
             }
+        }
+        char restname[100];
+        int flag=0;
+        printf("Enter restaurant name\n");
+        scanf("%s",restname);
+        for(int i=0;i<cadd;i++){
+            if (strcmp(restname,r[i].name)==0){
+                printf("Enter new address\n");
+                scanf("%s",r[i].address);
+                printf("Enter new distance\n");
+                scanf("%f",&r[i].dist);
+                printf("Enter new contact\n");
+                scanf("%s",r[i].contact);
+                printf("Enter no.of dishes in the menu\n");
+                scanf("%d",&r[i].num_dishes);
+                flag=1;
+                break;
+            }
+        }
+        if (flag==0){
+            printf("rest name don't match\n");
+            printf("These are the restaurants available \n");
+            for (int i = 0; i < cadd; i++){
+                printf("%s\n",r[i].name);
+            }
+        }
+    }
+    else if (strcmp(input,"3")==0){ //to delete a restaurant
+        fptr = fopen("new_file", "r");
+        for(int i  = 0;i<100;i++){
+            fscanf(fptr,"%s",r[i].name);
+            fscanf(fptr,"%s",r[i].address);
+            fscanf(fptr,"%f",&r[i].dist);
+            fscanf(fptr,"%s",r[i].contact);
+            fscanf(fptr,"%d", &r[i].num_dishes);
+            for(int j = 0;j < 1;j++){
+                fscanf(fptr,"%s %s %s %s",r[i].d[j].nameofdish, r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
+            }
+        }
+        fclose(fptr);
+        for(int i=0;i<100;i++){
+            if(strcmp(r[i].name,"") == 0){
+                cadd = i; //counter for no.of restaurants
+                break;
+            }
+        }
+        char restname[100];
+        printf("Enter restaurant name\n");
+        scanf("%s",restname);
+        for(int i=0;i<cadd;i++){
+            if(strcmp(restname,r[i].name)==0){
+                for(int j=i;j<cadd-1;j++){
+                    r[j]=r[j+1];
+                }
+                cadd=cadd-1;
+                *ptr=1;
+                break;
+            }
+        }
+        if (*ptr==0){
+            printf("rest name don't match\n");
+            printf("These are the restaurants available \n");
+            for (int i = 0; i < cadd; i++){
+                printf("%s\n",r[i].name);
+            }
+        }
+    }
+        for(int i=0;i<100;i++){
+            if(strcmp(r[i].name,"") == 0){
+                cadd = i; //counter for no.of restaurants
+                break;
+            }
+        }
+        if(strcmp(input,"3")==0 && *ptr==1) {
+            cadd=cadd-1;
         }
         for(int i=0;i<100;i++){
             if(strcmp(r[cadd-1].d[i].nameofdish,"") == 0){
