@@ -2,87 +2,69 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct food_item {
 
-    char nameofdish[50]; 
-    char typeofdish[20];
-    char categoryofdish[20];
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+struct Dishes
+{
+    char nameofdish[30]; 
+    char typeofdish[20]; //whether it is veg/non-veg/jain
+    char categoryofdish[20]; //whether it is beverage/fastfood...
     char priceofdish[10];
 };
 
-struct hotel { 
-    char name[50];
-    int num_items;
-    struct food_item menu[50];
+struct rest{
+    char name[20];
+    char address[50];
+    float dist; //enter in Km
+    char contact[10];
+    int num_dishes;
+    struct Dishes d[20];
 };
 
-void add_item(struct hotel *h, char *name, char *type,char *category,char *price) {
-    struct food_item item;
-    strcpy(item.nameofdish, name);
-    strcpy(item.typeofdish, type);
-    strcpy(item.categoryofdish, category);
-    strcpy(item.priceofdish, price);    
-    (*h).menu[(*h).num_items] = item;
-    (*h).num_items++;
-}
-
-void print_menu(struct hotel *h) {
-    printf("Menu for %s:\n", h->name);
-    for (int i = 0; i < h->num_items; i++) {
-        printf("%d %s %s %s %s\n", i+1, h->menu[i].nameofdish,h->menu[i].typeofdish, h->menu[i].categoryofdish, h->menu[i].priceofdish);
-    }
-}
-
-int main() {
-
+int main(){
+    int cadd=0; //counter for no.of restaurants
+    int counter=0; //counter for no.of dishes 
     FILE *fptr;
-    int cadd;
-    fptr = fopen("dish_file", "r");
-    struct food_item d[100];
-    for(int i = 0;i<100;i++){
-        fscanf(fptr,"%s %s %s %s",d[i].nameofdish,d[i].typeofdish,d[i].categoryofdish,d[i].priceofdish);
+    fptr = fopen("new_file", "r");
+    struct rest r[100];
+    int i = 0;
+    while(fscanf(fptr,"%s",r[i].name)!=EOF){
+        fscanf(fptr,"%s",r[i].address);
+        fscanf(fptr,"%f",&r[i].dist);
+        fscanf(fptr,"%s",r[i].contact);
+        fscanf(fptr,"%d", &r[i].num_dishes);
+        for(int j = 0;j < r[i].num_dishes;j++){
+            fscanf(fptr,"%s %s %s %s",r[i].d[j].nameofdish, r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
+        }
+        i++;
+    }
+    fclose(fptr); 
+    printf("%d\n",i);
+    while(1){
+        //system("clear")
+        int choice;
+        struct rest rest_chose;
+        printf("Choose restaurant(0 to exit):\n");
+        for(int j = 0;j<i;j++){
+            printf("%d) %s\n",j+1,r[j].name);
+        }
+        scanf("%d",&choice);
+        while(choice > i){
+            if(choice <=0) break;
+            printf("Invalid choice, please enter again:");
+            scanf("%d",&choice);
+        }
+        if(choice <=0) break;
+        rest_chose = r[choice-1];
+        while(1){
+            int choice;
+            printf("Choose type:\n1)veg\n2)non-veg\n3)jain\n4)all\n5)Empty cart and go back to Restaurants\n");
+            scanf("%d",&choice);
+            if(choice == 5) break;
+        }
         
     }
- 
-    for(int i = 0;i<100;i++){
-        if(strcmp(d[i].nameofdish,"") == 0){
-            cadd = i;
-            break;
-        }
-    }
-    fclose(fptr);
-
-    struct hotel my_hotel;
-    strcpy(my_hotel.name, "My Hotel");
-    my_hotel.num_items = 0;
-
-    for(int i = 0;i<cadd;i++){
-        //printf("%s %s %s %s\n",d[i].nameofdish,d[i].typeofdish,d[i].categoryofdish,d[i].priceofdish);
-        add_item(&my_hotel,d[i].nameofdish,d[i].typeofdish,d[i].categoryofdish,d[i].priceofdish);
-    }
-
-    print_menu(&my_hotel);
-
-    int cart[50];
-    int num_items = 0;
-    int choice = 0;
-    do {
-        printf("Enter item number to add to cart (0 to finish): ");
-        scanf("%d", &choice);
-        if (choice != 0) {
-            cart[num_items] = choice - 1;
-            num_items++;
-        }
-    } while (choice != 0);
-
-    printf("Items in cart:\n");
-    int total = 0;
-    for (int i = 0; i < num_items; i++) {
-        int index = cart[i];
-        printf("%s %s %s %s\n", my_hotel.menu[index].nameofdish,my_hotel.menu[index].typeofdish,my_hotel.menu[index].categoryofdish, my_hotel.menu[index].priceofdish);
-        total += atoi(my_hotel.menu[index].priceofdish);
-    }
-    printf("Total: %d\n", total);
-
-    return 0;
 }
