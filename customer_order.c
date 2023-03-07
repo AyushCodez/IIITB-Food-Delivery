@@ -10,8 +10,6 @@ struct dishes
     char priceofdish[10];
 };
 
-
-
 struct rest{
     char name[20];
     char address[50];
@@ -21,11 +19,11 @@ struct rest{
     struct dishes d[20];
 };
 
-typedef struct current_customer{
+typedef struct current_customer1{
 	char nm[21]; char ph[11]; char ad[201];
 	char us[11]; char ps[11];
 	double mny; // money
-} cc;
+} cc_new;
 
 void print_dish(struct dishes d){
     printf("%s %s %s %s\n",d.nameofdish,d.typeofdish,d.categoryofdish,d.priceofdish);
@@ -43,7 +41,7 @@ struct cart{
     int price;
 };
 
-void main_order(cc cust){
+float main_order(cc_new cust){
     FILE *fptr;
     fptr = fopen("new_file", "r");
     struct rest r[100];
@@ -60,7 +58,7 @@ void main_order(cc cust){
     }
     fclose(fptr); 
     while(1){
-        //system("clear")
+        system("clear");
         int choice;
         struct rest rest_chose;
         printf("Choose restaurant(0 to exit):\n");
@@ -73,7 +71,7 @@ void main_order(cc cust){
             printf("Invalid choice, please enter again:");
             scanf("%d",&choice);
         }
-        if(choice <=0) break;
+        if(choice <=0) return 0;
         rest_chose = r[choice-1];
         struct cart mycart;
         struct order_dish d[30];
@@ -84,6 +82,7 @@ void main_order(cc cust){
         mycart.num_of_dishes = 0;
         mycart.price = 0;
         while(1){
+            system("clear");
             int type_choice = -1;
             char type[10];
             printf("Choose type:\n1)Veg\n2)Non-Veg\n3)Jain\n4)See all\n5)Empty cart and go back to Restaurants\n6)View Cart\n");
@@ -97,6 +96,7 @@ void main_order(cc cust){
             else if(type_choice == 2) strcpy(type,"Non-Veg");
             else if(type_choice == 3) strcpy(type,"Jin");
             if(type_choice == 6){
+                system("clear");
                 if(mycart.num_of_dishes == 0) printf("Nothing in Cart yet\n");
                 else{
                     int choice1;
@@ -105,21 +105,55 @@ void main_order(cc cust){
                     for(int j = 0;j<mycart.num_of_dishes;j++){
                         printf("%s | %d\n",mycart.dishes[j].dish.nameofdish,mycart.dishes[j].quantity);
                     }
-                    printf("Price: %.2f\n",mycart.price);
-                    printf("Delivery charges: %.2f\n",mycart.restaurant.dist*30);
-                    printf("Total Cost: %.2f\n",mycart.price + mycart.restaurant.dist*30);
+                    float deliv_cost = 50 + mycart.restaurant.dist*4;
+                    printf("Price: %.2f\n",(float)mycart.price);
+                    printf("Delivery charges: %.2f\n",deliv_cost);
+                    printf("Total Cost: %.2f\n",mycart.price + deliv_cost);
                     printf("1)Checkout\n2)Go Back\n");
                     scanf("%d",&choice1);
                     if(choice1 == 1){
-                        int left = cust.mny < mycart.price - mycart.restaurant.dist*30;
+                        float left = cust.mny - mycart.price - mycart.restaurant.dist*30;
                         if(left<0){
-                            printf("You don't have enough money for this transaction\nPress Enter to go back to profile");
-                            scanf("");
+                            int dump;
+                            printf("You don't have enough money for this transaction\nGo back to:\n1)Profile\n2)Menu\n");
+                            scanf("%d",&dump);
+                            if(dump == 1) return 0;
+                        }
+                        else{
+                            FILE * ptr = fopen("num_of_delivs.txt","r");
+                            int del_id;
+                            char del_ids[5];
+                            fscanf(ptr,"%d",&del_id);
+                            fclose(ptr);
+                            ptr = fopen("num_of_delivs.txt","w");
+                            fprintf(ptr,"%d",del_id+1);
+                            fclose(ptr);
+                            ptr = fopen("num_of_delivs.txt","r");
+                            fscanf(ptr,"%s",del_ids);
+                            fclose(ptr);
+                            while(strlen(del_ids)<4){
+                                char temp[5] = "0";
+                                strcat(temp,del_ids);
+                                strcpy(del_ids,temp);
+                            }
+                            printf("%s %ld\n",del_ids,strlen(del_ids));
+                            ptr = fopen("cust_order.txt","a");
+                            fprintf(ptr,"not_assigned %s %s %s %s 0 %s %.2f %.2f\n", cust.nm, cust.ph, cust.ad, mycart.restaurant.address, del_ids, (float)mycart.price, deliv_cost);
+                            fprintf(ptr,"%d\n",mycart.num_of_dishes);
+                            for(int j = 0;j< mycart.num_of_dishes;j++){
+                                fprintf(ptr,"%s %d\n",mycart.dishes[j].dish.nameofdish,mycart.dishes[j].quantity);
+                            }
+                            fclose(ptr);
+                            printf("Order Placed. You have %.2f left in your account\n",left);
+                            printf("Enter any number to go back to profile ");
+                            scanf("%d",&choice1);
+                            return mycart.price + deliv_cost;
                         }
                     }
                 }
             }
             while(type_choice!=6){
+                system("clear");
                 int cat_choice;
                 char cat[12];
 
@@ -139,6 +173,7 @@ void main_order(cc cust){
 
                 int dish_choice;
                 int quantity;
+                system("clear");
                 for(int i = 0; i< rest_chose.num_dishes;i++){
                     if(strcmp(rest_chose.d[i].typeofdish,type) == 0 || type_choice == 4){
                         if(strcmp(rest_chose.d[i].categoryofdish,cat) == 0 || cat_choice == 7){
@@ -147,9 +182,10 @@ void main_order(cc cust){
                         }
                     }
                 }
-                printf("Enter dish choice number to add to cart:");
+                printf("Enter dish choice number to add to cart(0 to go back):");
                 scanf("%d",&dish_choice);
-                while(dish_choice<1 || dish_choice > rest_chose.num_dishes){
+                if(dish_choice<1) break;
+                while(dish_choice > rest_chose.num_dishes){
                     printf("Invalid Number please try again:");
                     scanf("%d",&dish_choice);
                 }
@@ -183,13 +219,3 @@ void main_order(cc cust){
     }
 }
 
-void main(){
-    cc c1;
-	strcpy(c1.nm,"Ayush");
-	strcpy(c1.ph,"1234567890");
-	strcpy(c1.ad,"B227");
-	strcpy(c1.us,"Ayush");
-	strcpy(c1.ps,"abc");
-	c1.mny=1000;
-    main_order(c1);
-}
