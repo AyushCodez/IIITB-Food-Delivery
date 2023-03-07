@@ -161,7 +161,7 @@ void login_Wrong(){
     char Pwd[10];
     char option[10];
         system("clear");
-    heading("Welcome to delivery page");
+    heading("Welcome to Restauarnt Owner page");
     printf("Wrong Password:\n\nPress 'Login' to login\nPress 'Create' to create new account: ");
     scanf("%s", option);
     printf("\n");
