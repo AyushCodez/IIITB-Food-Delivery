@@ -1,2 +1,35 @@
-Ayush 1234567890 ayush 490350058
-Sarvesh 1234567890 sarvesh 490350059
+McD
+Neeladri
+2.300000
+9962823761
+sarvesh
+1294066647
+0
+Onesta
+Neeladri
+3.100000
+9884001236
+ayush
+1294066648
+0
+Dominoes
+Neeladri
+3.400000
+9962591591
+owais
+1294066649
+0
+CasaPicaso
+Neeladri
+3.100000
+9884001236
+sarvesh
+1294066650
+0
+Truffles
+Neeladri
+4.500000
+9962591591
+ayush
+1294066651
+0

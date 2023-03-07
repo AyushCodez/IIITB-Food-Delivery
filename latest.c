@@ -61,8 +61,7 @@ void heading(char title[]){ // heading
 }
 
 int check_if_aldready_exists(char* input){
-    FILE* f_ptr = fopen("restiv.txt","r");
-    FILE* f_ptr1 = fopen("lativ.txt","r");
+    FILE* f_ptr = fopen("lativ.txt","r");
     //printf("Hi\n");
     char name[20];
     char phone_num[11];
@@ -71,7 +70,7 @@ int check_if_aldready_exists(char* input){
     char address[50];
     float dist; //enter in Km
     int num_dishes=0;
-    while(fscanf(f_ptr, "%s %s %f %s %s %d %d", name, address,&dist,phone_num, pswd, &User_id,&num_dishes) != EOF){//printf("HI\n");
+    while(fscanf(f_ptr, "%s %s %f %s %d", name, address,&dist,phone_num,&num_dishes) != EOF){//printf("HI\n");
         if(strcmp(input, name) == 0)
         {
             //printf("HELLO\n");
@@ -79,20 +78,11 @@ int check_if_aldready_exists(char* input){
         }
     }
     fclose(f_ptr);
-    while(fscanf(f_ptr1, "%s %s %f %s %d", name, address,&dist,phone_num,&num_dishes) != EOF){//printf("HI\n");
-        if(strcmp(input, name) == 0)
-        {
-            //printf("HELLO\n");
-            return 1;
-        }
-    }
-    fclose(f_ptr1);
     return 0;
 }
 
 char* retrieve_password(char* input){
-    FILE* f_ptr = fopen("restiv.txt","r");
-    FILE* f_ptr1 = fopen("lativ.txt","r");
+    FILE* f_ptr = fopen("lativ.txt","r");
     char* name; name = (char*)malloc(20);
     char phone_num[10];
     char* pswd = (char*)malloc(10);
@@ -100,7 +90,7 @@ char* retrieve_password(char* input){
     char* address=(char*)malloc(50);
     float dist;
     int num_dishes=0;
-    while(fscanf(f_ptr, "%s %s %f %s %s %d %d", name, address,&dist,phone_num, pswd, &User_id,&num_dishes) != EOF){
+    while(fscanf(f_ptr, "%s %s %f %s  %d", name, address,&dist,phone_num,&num_dishes) != EOF){
         if(strcmp(input, name) == 0)
         {
             fclose(f_ptr);
@@ -108,20 +98,11 @@ char* retrieve_password(char* input){
         }
     }
     fclose(f_ptr);
-    while(fscanf(f_ptr1, "%s %s %f %s %d", name, address,&dist,phone_num,&num_dishes) != EOF){
-        if(strcmp(input, name) == 0)
-        {
-            fclose(f_ptr1);
-            return pswd;
-        }
-    }
-    fclose(f_ptr1);
     return NULL;
 }
 
 int current_user_id(){
-    FILE* fptr = fopen("restiv.txt","r");
-    FILE* fptr1 = fopen("lativ.txt","r");
+    FILE* fptr = fopen("lativ.txt","r");
     char name[20];
     char phone_num[10];
     char pswd[10];
@@ -137,14 +118,10 @@ int current_user_id(){
     char prev_address[50];
     float prev_dist;
     int prev_num_dishes=0;
-    while(fscanf(fptr, "%s %s %f %s %s %d %d", name, address,&dist,phone_num, pswd, &User_id,&num_dishes) != EOF){
+    while(fscanf(fptr, "%s %s %f %s %d", name, address,&dist,phone_num,&num_dishes) != EOF){
         strcpy(name,prev_name);strcpy(phone_num,prev_phone_num);strcpy(pswd, prev_pswd); prev_id = User_id;strcpy(address,prev_address);prev_dist=dist;prev_num_dishes=num_dishes;
     }
     fclose(fptr);
-    while(fscanf(fptr1, "%s %s %f %s %d", name, address,&dist,phone_num,&num_dishes) != EOF){
-        strcpy(name,prev_name);strcpy(phone_num,prev_phone_num);strcpy(pswd, prev_pswd); prev_id = User_id;strcpy(address,prev_address);prev_dist=dist;prev_num_dishes=num_dishes;
-    }
-    fclose(fptr1);
     return prev_id;
 }
 
@@ -191,12 +168,9 @@ void create_profile(){
 
     int U_id = current_user_id() + 1;
 
-    FILE* f_ptr = fopen("restiv.txt","a");
-    FILE* f_ptr1 = fopen("lativ.txt","a");
-    fprintf(f_ptr, "%s\n%s\n%f\n%s\n%s\n%d\n%d\n", Username, Address, Dist,Phone_number,Pwd,U_id,num_dishes);
-    fprintf(f_ptr1, "%s\n%s\n%f\n%s\n%d\n", Username, Address, Dist,Phone_number,num_dishes);
+    FILE* f_ptr = fopen("lativ.txt","a");
+    fprintf(f_ptr, "%s\n%s\n%f\n%s\n%d\n", Username, Address, Dist,Phone_number,num_dishes);
     fclose(f_ptr);
-    fclose(f_ptr1);
     printf("Thank You for Joining our Team!!\npress any key to continue: ");
     char dummy;
     scanf("%c", &dummy);
