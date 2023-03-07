@@ -178,8 +178,7 @@ void login_Wrong(){
         printf("\n");
         if(check_if_aldready_exists(Username)){
             if(strcmp(retrieve_password(Username), Pwd) == 0){ 
-                printf("Logged in\n");//Owais's Function
-                //delivery_main(Username);
+                printf("Logged in\n");
                 return ;
             }
             else{
@@ -224,8 +223,7 @@ void login(){
         printf("\n");
         if(check_if_aldready_exists(Username)){
             if(strcmp(retrieve_password(Username), Pwd) == 0){ 
-                printf("Logged in\n");//Owais's Function
-                //delivery_main(Username);
+                printf("Logged in\n");
                 return ;
             }
             else{
