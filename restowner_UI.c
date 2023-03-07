@@ -3,12 +3,11 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include "restaurant_func.c"
 
 
 void login();
-int add_restaurant(char resname[50]);
-int remove_restaurant(char resname[50]);
-int update_restaurant(char resname[50]);
+
 
 char* int_to_char_converter(int n){
     int len_str = 0;
@@ -157,7 +156,7 @@ void create_profile(){
     int num_dishes=0;
     system("clear");
     heading("CREATE_PROFILE");
-    printf("Please enter your Restauarant Name (Please donot use ' '(spaces) and maximum length 20): ");
+    printf("Please enter your Restaurant Name (Please donot use ' '(spaces) and maximum length 20): ");
     scanf("%s", Username);
     strcat(Username,"\0");
 
@@ -170,18 +169,16 @@ void create_profile(){
         scanf("%s", Phone_number);
         strcat(Phone_number,"\0");
     }
-    printf("%s\n", Phone_number);
-    printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
+    printf("Please enter your Password (Please do not use ' '(spaces) and maximum length 10): ");
     scanf("%s", Pwd);
     strcat(Pwd,"\0");
-    printf("Please enter your address");
+    printf("Please enter your address: ");
     scanf("%s",Address);
     strcat(Address,"\0");
-    printf("Please enter your distance from IITB");
+    printf("Please enter your distance from IITB: ");
     scanf("%f",&Dist);
-    printf("%s\n", Phone_number);
     if(check_if_aldready_exists(Username)){
-        printf("Aldready Exists!! press any key to continue\n");
+        printf("Already Exists!! press any key to continue\n");
         char dummy;
         scanf("%c", &dummy);
         scanf("%c", &dummy);
@@ -263,32 +260,39 @@ void login(){
         return ;
     }
     else if(strcmp(option,"login")==0||strcmp(option,"Login")==0||strcmp(option,"LOGIN")==0){
-        printf("Please enter your Restauarnt Name (Please donot use ' '(spaces) and maximum length 20): ");
+        printf("Please enter your Restauarnt Name (Please do not use ' '(spaces) and maximum length 20): ");
         scanf("%s", Username);
         printf("\n");
-        printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
+        printf("Please enter your Password (Please do not use ' '(spaces) and maximum length 10): ");
         scanf("%s", Pwd);
         printf("\n");
         if(check_if_aldready_exists(Username)){
             if(strcmp(retrieve_password(Username), Pwd) == 0){ 
                 printf("Logged in\n");
                 system("clear");
-                char input[10];
+                int input;
                 char resname[50];
-                printf("Enter restaurant name\n");
-                scanf("%s",resname);
-                printf("Enter 1 to add restauarant,2 to update restauarnt and 3 to remove restaurant");
-                scanf("%s",input);
-                if (strcmp(input,"1")==0){
-                    add_restaurant(resname);
+                strcpy(resname,Username);
+                while(1){
+                    printf("Enter:\n1)Add Dish\n2)Update restaurant\n3)Remove Dish\n4)Exit");
+                    scanf("%d",&input);
+                    while(input<1 || input>4){
+                        printf("Invalid input, Please enter again: ");
+                        scanf("%d",&input);
+                    }
+                    if (input == 1){
+                        add_dish(resname);
+                    }
+                    else if(input == 2){
+                        update_restaurant(resname);
+                    }
+                    else if(input == 3){
+                        remove_dish(resname);
+                    }
+                    else if(input == 4){
+                        return;
+                    }
                 }
-                else if(strcmp(input,"2")==0){
-                    update_restaurant(resname);
-                }
-                else if(strcmp(input,"3")==0){
-                    remove_restaurant(resname);
-                }
-                return ;
             }
             else{
                 login_Wrong();
@@ -300,7 +304,6 @@ void login(){
             char dummy;
             scanf("%c", &dummy);
             scanf("%c", &dummy);
-            printf("%c", dummy);
             login();
         }
     }
@@ -310,21 +313,6 @@ void login(){
     }    
 }
 
-int add_restaurant(char resname[50]){
-    printf("owner wants to add to ");
-    printf(resname);
-    printf("\n");
-}
-int remove_restaurant(char resname[50]){
-    printf("owner wants to remove ");
-    printf(resname);
-    printf("\n");
-}
-int update_restaurant(char resname[50]){
-    printf("owner wants to update to ");
-    printf(resname);
-    printf("\n");
-}
 int main(void){
     login();
     return 0;

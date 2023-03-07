@@ -208,9 +208,9 @@ void update_restaurant(char * name){
 }
 
 
-int main(void){
-    char restraunt[20];
-    scanf("%s",restraunt);
-    update_restaurant(restraunt);
-    return 0;
-}
+// int main(void){
+//     char restraunt[20];
+//     scanf("%s",restraunt);
+//     update_restaurant(restraunt);
+//     return 0;
+// }
