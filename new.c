@@ -55,7 +55,7 @@ int main(){
             fscanf(fptr,"%f",&r[i].dist);
             fscanf(fptr,"%s",r[i].contact);
             fscanf(fptr,"%d", &r[i].num_dishes);
-            for(int j = 0;j < r[i].num_dishes;j++){
+            for(int j = 0;j < 1;j++){
                 fscanf(fptr,"%s %s %s %s",r[i].d[j].nameofdish, r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
             }
         }
@@ -66,13 +66,6 @@ int main(){
                 break;
             }
         }
-        /*for(int i=0;i<100;i++){
-            if(strcmp(r[cadd-1].d[i].nameofdish,"") == 0){
-                counter = i;
-                break;
-            }
-        }
-        printf("%d %d\n",cadd,counter);*/
         counter=0;
         printf("Name of the restaurant");
         scanf("%s",r[cadd].name);
@@ -82,8 +75,8 @@ int main(){
         scanf("%f",&r[cadd].dist);
         printf("Contact of restaurant");
         scanf("%s",r[cadd].contact);
-        printf("Enter no.of dishes in the menu");
-        scanf("%d",&r[cadd].num_dishes);
+        //printf("Enter no.of dishes in the menu");
+        //scanf("%d",&r[cadd].num_dishes);
         char inp[10];
         printf("Enter 1 to add dish to the menu\n");
         printf("Enter exit to exit\n");
@@ -128,7 +121,7 @@ int main(){
         }
         fptr=fopen("new_file","w");
         for(int i=0;i<cadd;i++){
-            fprintf(fptr,"%s\n%s\n%f\n%s\n%d\n",r[i].name,r[i].address,r[i].dist,r[i].contact,r[i].num_dishes);
+            fprintf(fptr,"%s\n%s\n%f\n%s\n%d\n",r[i].name,r[i].address,r[i].dist,r[i].contact,counter);
             for(int j=0;j<counter;j++){
                 fprintf(fptr,"%s %s %s %s\n",r[i].d[j].nameofdish,r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
             }
