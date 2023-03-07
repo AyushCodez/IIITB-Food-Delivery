@@ -1,8 +1,9 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<time.h>
-#include<math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <math.h>
+#include "delivery.h"
 
 void login();
 
@@ -177,6 +178,7 @@ void login_Wrong(){
         if(check_if_aldready_exists(Username)){
             if(strcmp(retrieve_password(Username), Pwd) == 0){ 
                 printf("Logged in\n");//Owais's Function
+
                 return ;
             }
             else{
@@ -221,6 +223,7 @@ void login(){
         if(check_if_aldready_exists(Username)){
             if(strcmp(retrieve_password(Username), Pwd) == 0){ 
                 printf("Logged in\n");//Owais's Function
+                delivery_main(Username);
                 return ;
             }
             else{
