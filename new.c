@@ -74,7 +74,7 @@ int main(){
         for(int i=0;i<cadd;i++){
             if (strcmp(r[cadd].name,r[i].name)==0){
                 printf("Restaurant already exists\n");
-                strcpy(r[cadd].name,' ');
+                strcpy(r[cadd].name," ");
                 flag=1;
             }
         }
@@ -109,10 +109,45 @@ int main(){
             fclose(fptr);
             printf("Name of the dish");
             scanf("%s",r[cadd].d[counter].nameofdish); 
-            printf("Enter type of dish(veg/non-veg)");
-            scanf("%s",r[cadd].d[counter].typeofdish);
-            printf("Enter category of dish (beverage/fastfood/desserts/maincourse/breakfast....)");
-            scanf("%s",r[cadd].d[counter].categoryofdish);
+            printf("Enter following numbers for type of dish 1.Jain 2.Veg 3.Non-Veg");
+            char in[10];
+            scanf("%s",in);
+            if (strcmp(in,"1")==0){
+                strcpy(r[cadd].d[counter].typeofdish,"Jain");
+            }
+            else if (strcmp(in,"2")==0){
+                strcpy(r[cadd].d[counter].typeofdish,"Veg");
+            }
+            else if (strcmp(in,"3")==0){
+                strcpy(r[cadd].d[counter].typeofdish,"Non-Veg");
+            }
+            else{
+                printf("Invalid Input");
+            }
+            printf("Enter following numbers for category of dish 1.Breakfast 2.Maincourse 3.Beverage 4.Desserts 5.Starters 6.Fastfood");
+            char jn[10];
+            scanf("%s",jn);
+            if (strcmp(in,"1")==0){
+                strcpy(r[cadd].d[counter].categoryofdish,"Breakfast");
+            }
+            else if (strcmp(in,"2")==0){
+                strcpy(r[cadd].d[counter].categoryofdish,"Maincourse");
+            }
+            else if (strcmp(in,"3")==0){
+                strcpy(r[cadd].d[counter].categoryofdish,"Beverage");
+            }
+            else if (strcmp(in,"4")==0){
+                strcpy(r[cadd].d[counter].categoryofdish,"Desserts");
+            }
+            else if (strcmp(in,"5")==0){
+                strcpy(r[cadd].d[counter].categoryofdish,"Starters");
+            }
+            else if (strcmp(in,"6")==0){
+                strcpy(r[cadd].d[counter].categoryofdish,"Fastfood");
+            }
+            else{
+                printf("Invalid Input");
+            }
             printf("Enter price of dish");
             scanf("%s",r[cadd].d[counter].priceofdish);  
         }
