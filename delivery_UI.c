@@ -155,36 +155,49 @@ void create_profile(){
     login();
 }
 
-
 void login_Wrong(){
     char Username[20];
     char Pwd[10];
     char option;
-    system("clear");
-    heading("Welcome to login");
-    printf("Wrong password please try again");
-    printf("Press 'l' to login OR Press 'c' to create new account: ");
+        system("clear");
+    heading("Welcome to delivery page");
+    printf("Wrong Password - Press 'l' to login OR Press 'c' to create new account: ");
     scanf("%c", &option);
     if(option == 'c'){
         create_profile();
         return ;
     }
-    printf("Please enter your Name (Please donot use ' '(spaces) and maximum length 20): ");
-    scanf("%s", Username);
-    printf("\n");
-    printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
-    scanf("%s", Pwd);
-    printf("\n");
-    if(check_if_aldready_exists(Username)){
-        if(strcmp(retrieve_password(Username), Pwd) == 0){
-            
+    else if(option == 'l'){
+        printf("Please enter your Name (Please donot use ' '(spaces) and maximum length 20): ");
+        scanf("%s", Username);
+        printf("\n");
+        printf("Please enter your Password (Please donot use ' '(spaces) and maximum length 10): ");
+        scanf("%s", Pwd);
+        printf("\n");
+        if(check_if_aldready_exists(Username)){
+            if(strcmp(retrieve_password(Username), Pwd) == 0){ 
+                printf("Logged in\n");//Owais's Function
+                return ;
+            }
+            else{
+                login_Wrong();
+                return ;
+            }
         }
         else{
-            printf("Wrong Password, retry!!");
+            printf("You are Not Registered, invalid Username!!\nPress any Key to continue: ");
+            char dummy;
+            scanf("%c", &dummy);
+            scanf("%c", &dummy);
+            printf("%c", dummy);
+            login();
         }
     }
+    else{
+        printf("Invalid Input");
+        login();
+    }    
 }
-
 
 void login(){
     char Username[20];
