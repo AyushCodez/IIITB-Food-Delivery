@@ -8,5 +8,5 @@ Kausthubh Manda
 Mohammad Owais
 Samyak Jain
 
-There are 3 executable files that we have customer, restaurant, and delivery that allow you to login and use functionality of each aspect of food delivery respectively.
+There are 3 executable files that we have customer_UI.c, restowner_UI.c, and delivery_UI.c that allow you to login and use functionality of each aspect of food delivery respectively.
 We are using a make file to create the 3 executable files from individual c codes.
