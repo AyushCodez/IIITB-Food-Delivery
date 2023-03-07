@@ -116,6 +116,9 @@ int main(){
             printf("Enter price of dish");
             scanf("%s",r[cadd].d[counter].priceofdish);  
         }
+        else{
+            printf("Invalid Input\n");
+        }
         }
         else if(flag==1){
             printf("These are the restaurants available \n");
