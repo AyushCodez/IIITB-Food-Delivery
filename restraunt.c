@@ -4,6 +4,7 @@
 
 #define rest_file "restraunt.txt"
 
+//Defining Struct for dishes
 struct dishes
 {
     char nameofdish[30]; 
@@ -12,6 +13,7 @@ struct dishes
     char priceofdish[10];
 };
 
+//Defining Struct to store function for restraunt
 struct rest{
     char name[20];
     char address[50];
@@ -21,16 +23,13 @@ struct rest{
     struct dishes d[20];
 };
 
+//Extracts inforamation from the txt file and creates an array of restraunts
 struct rest* extract(){
     FILE *fptr;
     fptr = fopen(rest_file, "r");
     struct rest* r; r = (struct rest*) malloc(100*sizeof(struct rest));
     int i = 0;
     while(fscanf(fptr,"%s %s %f %s %d",r[i].name, r[i].address, &r[i].dist, r[i].contact, &r[i].num_dishes)!=EOF){
-        /*fscanf(fptr,"%s",r[i].address);
-        fscanf(fptr,"%f",&r[i].dist);
-        fscanf(fptr,"%s",r[i].contact);
-        fscanf(fptr,"%d", &r[i].num_dishes);*/
         for(int j = 0;j < r[i].num_dishes;j++){
             fscanf(fptr,"%s %s %s %s",r[i].d[j].nameofdish, r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
         }
@@ -40,6 +39,7 @@ struct rest* extract(){
     return r;
 }
 
+//Helps us add new dishes to a restraunts menu
 void add_dish(char* Rest_name){
     char name[30];
     char type[20];
@@ -95,15 +95,6 @@ void add_dish(char* Rest_name){
             }
     }
 
-    /*FILE *f_ptr = fopen(rest_file, "w");
-    for(int j = 0; j < i; j++){
-        fprintf(f_ptr,"%s\n%s\n%.2f\n%s\n%d",r[i].name, r[i].address, r[i].dist, r[i].contact, r[i].num_dishes);
-        for(int k = 0; k < r[i].num_dishes; k++){
-            fprintf(f_ptr, "%s %s %s %s", r[i].d[j].nameofdish, r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
-        }
-    }
-    fclose(f_ptr);*/
-
     fptr=fopen(rest_file,"w");
         for(int k=0;k<i;k++){
             fprintf(fptr,"%s\n%s\n%f\n%s\n%d\n",r[k].name,r[k].address,r[k].dist,r[k].contact,r[k].num_dishes);
@@ -111,9 +102,11 @@ void add_dish(char* Rest_name){
                 fprintf(fptr,"%s %s %s %s\n",r[k].d[j].nameofdish,r[k].d[j].typeofdish,r[k].d[j].categoryofdish,r[k].d[j].priceofdish);
             }
         }
+    fclose(fptr);
 
 }
 
+//Removes a dish from the menu of a restraunt
 void remove_dish(char* Rest_name){
     char name[30];
     printf("Please enter the name of the Dish you wish to remove: ");
@@ -123,10 +116,6 @@ void remove_dish(char* Rest_name){
     struct rest* r; r = (struct rest*) malloc(100*sizeof(struct rest));
     int i = 0;
     while(fscanf(fptr,"%s %s %f %s %d",r[i].name, r[i].address, &r[i].dist, r[i].contact, &r[i].num_dishes)!=EOF){
-        /*fscanf(fptr,"%s",r[i].address);
-        fscanf(fptr,"%f",&r[i].dist);
-        fscanf(fptr,"%s",r[i].contact);
-        fscanf(fptr,"%d", &r[i].num_dishes);*/
         for(int j = 0;j < r[i].num_dishes;j++){
             fscanf(fptr,"%s %s %s %s",r[i].d[j].nameofdish, r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
         }
@@ -157,14 +146,6 @@ void remove_dish(char* Rest_name){
             }
     }
 
-    /*FILE *f_ptr = fopen(rest_file, "w");
-    for(int j = 0; j < i; j++){
-        fprintf(f_ptr,"%s\n%s\n%f\n%s\n%d",r[i].name, r[i].address, r[i].dist, r[i].contact, r[i].num_dishes);
-        for(int k = 0; k < r[i].num_dishes; k++){
-            fprintf(f_ptr, "%s %s %s %s", r[i].d[j].nameofdish, r[i].d[j].typeofdish,r[i].d[j].categoryofdish,r[i].d[j].priceofdish);
-        }
-    }*/
-
     fptr=fopen(rest_file,"w");
         for(int k=0;k<i;k++){
             fprintf(fptr,"%s\n%s\n%f\n%s\n%d\n",r[k].name,r[k].address,r[k].dist,r[k].contact,r[k].num_dishes);
@@ -172,6 +153,7 @@ void remove_dish(char* Rest_name){
                 fprintf(fptr,"%s %s %s %s\n",r[k].d[j].nameofdish,r[k].d[j].typeofdish,r[k].d[j].categoryofdish,r[k].d[j].priceofdish);
             }
         }
+    fclose(fptr);
 
 }
 
