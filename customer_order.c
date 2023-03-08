@@ -45,7 +45,7 @@ struct cart{
 
 float main_order(cc_new cust){
     FILE *fptr;
-    fptr = fopen("new_file", "r");
+    fptr = fopen("lativ.txt", "r");
     struct rest r[100];
     int i = 0;
     while(fscanf(fptr,"%s",r[i].name)!=EOF){
