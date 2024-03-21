@@ -8,3 +8,16 @@ Neeladri
 4.500000
 9962591591
 0
+Smoor
+Smoor,Neeladri
+2.400000
+1234567890
+1
+Cake Veg Desserts 100
+Nataraj
+Nataraj,Neeladri
+2.400000
+1234567890
+2
+Bhature Veg Maincourses 100
+lassi Veg Beverages 50
