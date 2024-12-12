@@ -4,18 +4,18 @@
 #include <string.h>
 #include <time.h>
 
-#define cust_order "cust_order.txt"
-#define accept_file "accept_file.txt"
-#define delivered_file "delivered_file.txt"
+// #define cust_order "cust_order.txt"
+// #define accept_file "accept_file.txt"
+// #define delivered_file "delivered_file.txt"
 
 typedef struct{
     char name[30];//name of dish
     int quantity;//quantity of dish
-} food_details;//food detials struct
+} food_details_d;//food detials struct
 
-struct food_details_list{
-    food_details details;
-    struct food_details_list* next;
+struct food_details_list_d{
+    food_details_d details;
+    struct food_details_list_d* next;
 };//linkedlist of individual food items
 
 typedef struct{
@@ -29,14 +29,14 @@ typedef struct{
     char order_id[10];
     float amount;
     float commission;
-    struct food_details_list* foods;
+    struct food_details_list_d* foods;
 
-} delivery_details;//delivery details of one customer
+} delivery_details_d;//delivery details of one customer
 
-struct deliveries{
-    delivery_details details;
-    struct deliveries* next;
-};//linkedlist of all deliveries
+struct deliveries_d{
+    delivery_details_d details;
+    struct deliveries_d* next;
+};//linkedlist of all deliveries_d
 
 struct delivery_guys{
     char name[30];
@@ -45,17 +45,17 @@ struct delivery_guys{
 };
 
 void check_file_for_changes(char* p, int o);//We don't need this now
-struct food_details_list* add_food_item(struct food_details_list* food_list_head,food_details* new_item);
-struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delivery_details* new_delivery);
-struct deliveries* read_details_from_file(char* f_address);
-int read_number_of_deliveries(char* f_address);
-void print_delivery(delivery_details* current_delivery,char* f_address);
-void show_orders(int* f, char* deliverer_name);
-delivery_details* order_accept(struct deliveries* delivery_list_head, int n, int OTP, char* deliverer_name);
+struct food_details_list_d* add_food_item_d(struct food_details_list_d* food_list_head,food_details_d* new_item);
+struct deliveries_d* add_new_delivery_d(struct deliveries_d* delivery_list_head,delivery_details_d* new_delivery);
+struct deliveries_d* read_details_from_file_d(char* f_address);
+int read_number_of_deliveries_d(char* f_address);
+void print_delivery1(delivery_details_d* current_delivery,char* f_address);
+void show_orders(int* f, char* deliverer_name, char* cust_order_file, char* accepted_file, char* delivereded_file,int testing);
+delivery_details_d* order_accept(struct deliveries_d* delivery_list_head, int n, int OTP, char* deliverer_name, char* accepted_file);
 void remove_delivery_from_file(char* f_address, char* order_id);
 int generate_OTP(int a, int b);
 char* itoa(int n);
-void delivery_main(char* deliverer_name);
+void delivery_main(char* deliverer_name,char* cust_order_file, char* accepted_file, char* delivereded_file, int testing);
 
 void check_file_for_changes(char* p, int o){//We don't need this now
     int checkval;
@@ -69,14 +69,14 @@ void check_file_for_changes(char* p, int o){//We don't need this now
     }while(1);
 }
 
-struct food_details_list* add_food_item(struct food_details_list* food_list_head,food_details* new_item){
-    struct food_details_list* new_food_list = malloc(sizeof(struct food_details_list));
+struct food_details_list_d* add_food_item_d(struct food_details_list_d* food_list_head,food_details_d* new_item){
+    struct food_details_list_d* new_food_list = malloc(sizeof(struct food_details_list_d));
     new_food_list -> details = *(new_item);
     if(food_list_head == NULL){
         new_food_list->next = NULL;
         return new_food_list;
     }
-    struct food_details_list* head_copy = food_list_head;
+    struct food_details_list_d* head_copy = food_list_head;
     while(food_list_head->next != NULL){
         food_list_head = food_list_head->next;
     }
@@ -84,14 +84,14 @@ struct food_details_list* add_food_item(struct food_details_list* food_list_head
     return head_copy;
 }
 
-struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delivery_details* new_delivery){
-    struct deliveries * new_delivery_list = malloc(sizeof(struct deliveries));
+struct deliveries_d* add_new_delivery_d(struct deliveries_d* delivery_list_head,delivery_details_d* new_delivery){
+    struct deliveries_d * new_delivery_list = malloc(sizeof(struct deliveries_d));
     new_delivery_list->details = *(new_delivery);
     if(delivery_list_head == NULL){
         new_delivery_list->next = NULL;
         return new_delivery_list;
     }
-    struct deliveries * head_copy = delivery_list_head;
+    struct deliveries_d * head_copy = delivery_list_head;
     while(delivery_list_head->next != NULL){
         delivery_list_head = delivery_list_head->next;
     }
@@ -99,31 +99,31 @@ struct deliveries* add_new_delivery(struct deliveries* delivery_list_head,delive
     return head_copy;
 }
 
-struct deliveries* read_details_from_file(char* f_address){
+struct deliveries_d* read_details_from_file_d(char* f_address){
     FILE* p = fopen(f_address,"r");
-    struct deliveries* delivery_list_head = malloc(sizeof(struct deliveries)); 
+    struct deliveries_d* delivery_list_head = malloc(sizeof(struct deliveries_d)); 
     delivery_list_head = NULL;
     while(1){
-        delivery_details* a = malloc(sizeof(delivery_details));
+        delivery_details_d* a = malloc(sizeof(delivery_details_d));
         if(fscanf( p ,"%s %s %s %s %s %d %s %f %f", a->delivery_id, a->name, a->id, a->u_a, a->r_a, &a->OTP, a->order_id, &a->amount, &a->commission) == EOF) break;
         int n;
         fscanf(p,"%d",&n);
         a->n = n;
-        struct food_details_list* food_list_head = malloc(sizeof(struct food_details_list));
+        struct food_details_list_d* food_list_head = malloc(sizeof(struct food_details_list_d));
         food_list_head = NULL;
         while(n--){
-            food_details* new_item = malloc(sizeof(food_details)); 
+            food_details_d* new_item = malloc(sizeof(food_details_d)); 
             fscanf(p ,"%s %d", new_item->name, &new_item->quantity);
-            food_list_head = add_food_item(food_list_head, new_item);
+            food_list_head = add_food_item_d(food_list_head, new_item);
             a->foods = food_list_head;
         }
-        delivery_list_head = add_new_delivery(delivery_list_head, a);
+        delivery_list_head = add_new_delivery_d(delivery_list_head, a);
     }
     fclose(p);
     return delivery_list_head;
 }
 
-int read_number_of_deliveries(char* f_address){
+int read_number_of_deliveries_d(char* f_address){
     int r = 0;
     FILE* p = fopen(f_address,"r");
     while(1){
@@ -143,11 +143,11 @@ int read_number_of_deliveries(char* f_address){
     return r;
 }
 
-void print_delivery(delivery_details* c,char* f_address){
+void print_delivery1(delivery_details_d* c,char* f_address){
     FILE* p = fopen(f_address,"a");
     fprintf(p,"%s %s %s %s %s %d %s %0.2f %0.2f\n", c->delivery_id, c->name, c->id, c->u_a, c->r_a, c->OTP, c->order_id, c->amount, c->commission);
     fprintf(p,"%d\n",c->n);
-    struct food_details_list* foods = c->foods;
+    struct food_details_list_d* foods = c->foods;
     while(foods!=NULL){
         fprintf(p,"%s %d\n",(foods->details).name, (foods->details).quantity);
         foods = foods->next;
@@ -155,31 +155,31 @@ void print_delivery(delivery_details* c,char* f_address){
     fclose(p);
 }
 
-delivery_details* order_accept(struct deliveries* delivery_list_head, int n, int OTP, char* deliverer_name){
-    delivery_details* accepted_delivery = malloc(sizeof(delivery_details));
+delivery_details_d* order_accept(struct deliveries_d* delivery_list_head, int n, int OTP, char* deliverer_name, char* accepted_file){
+    delivery_details_d* accepted_delivery = malloc(sizeof(delivery_details_d));
     for(int i = 1; i < n; i++){
         delivery_list_head = delivery_list_head->next;
     }
     delivery_list_head->details.OTP = OTP;
     accepted_delivery = &delivery_list_head->details;
     strcpy(accepted_delivery->delivery_id, deliverer_name);
-    print_delivery(accepted_delivery,accept_file);
+    print_delivery1(accepted_delivery,accepted_file);
     return accepted_delivery;
 }
 
 void remove_delivery_from_file(char* f_address, char* order_id){
-    struct deliveries* a = read_details_from_file(f_address);
+    struct deliveries_d* a = read_details_from_file_d(f_address);
     FILE* file = fopen(f_address, "w");
     fclose(file);
     if(a == NULL)
         return;
-    struct deliveries* b = a->next;
+    struct deliveries_d* b = a->next;
     if(strcmp(a->details.order_id,order_id)==0){
         a = b;
     }
     else{
         do{
-        print_delivery(&a->details, f_address);
+        print_delivery1(&a->details, f_address);
         a = a->next;
         b = b->next;
         if(b == NULL)
@@ -188,7 +188,7 @@ void remove_delivery_from_file(char* f_address, char* order_id){
         a = a->next;
     }
     while(a!=NULL){
-        print_delivery(&a->details, f_address);
+        print_delivery1(&a->details, f_address);
         a = a->next;
     }
 }
@@ -231,54 +231,63 @@ char* itoa(int n){
     return str;
 }
 
-void show_orders(int* f, char* deliverer_name){
+void show_orders(int* f, char* deliverer_name,char *cust_order_file, char* accepted_file, char* delivereded_file,int testing){
+
     char response[30];
     while(1){
         printf("\n\n\t\t\t\t\t\t\t\t  Do you want to\n\n\t\t\t\t\t\t\t\t  Check for new orders?(Press Yes)\n\t\t\t\t\t\t\t\t  Or exit the application?(Press exit)\n\n\t\t\t\t\t\t\t\t  Response:");
         scanf("%s",response);
+        printf("Our response is %s\n",response);
         if(strcmp(response,"exit")==0||strcmp(response,"Exit")==0||strcmp(response,"EXIT")==0||strcmp(response,"no")==0||strcmp(response,"No")==0||strcmp(response,"NO")==0){
             *f = 0;
             system("clear");
-            printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+            
+            printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
             for(int i=0;i<173;i++) printf("_");printf("\n");
             return;
         }
         else if(strcmp(response,"yes")==0||strcmp(response,"Yes")==0||strcmp(response,"YES")==0){
-            struct deliveries* a = read_details_from_file(cust_order);
+            printf("\nCustomer order file is %s\n",cust_order_file);
+            struct deliveries_d* a = read_details_from_file_d(cust_order_file);
             while(1){
                 system("clear");
-                printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                
+                printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                 for(int i=0;i<173;i++) printf("_");printf("\n");
                 while(a==NULL){
                     system("clear");
-                    printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                    
+                    printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                     for(int i=0;i<173;i++) printf("_");printf("\n");
-                    printf("\n\n\t\t\t\t\t\t\t\t  There are no deliveries available right now.\n\n\t\t\t\t\t\t\t\t  Do you want to\n\n\t\t\t\t\t\t\t\t  Check for new orders?(Press Yes to check again.)\n\t\t\t\t\t\t\t\t  Or exit the application?(Press exit)\n\n\t\t\t\t\t\t\t\t  Response:");
+                    printf("\n\n\t\t\t\t\t\t\t\t  There are no deliveries_d available right now.\n\n\t\t\t\t\t\t\t\t  Do you want to\n\n\t\t\t\t\t\t\t\t  Check for new orders?(Press Yes to check again.)\n\t\t\t\t\t\t\t\t  Or exit the application?(Press exit)\n\n\t\t\t\t\t\t\t\t  Response:");
                     scanf("%s",response);
                     if(strcmp(response,"exit")==0||strcmp(response,"Exit")==0||strcmp(response,"EXIT")==0||strcmp(response,"no")==0||strcmp(response,"No")==0||strcmp(response,"NO")==0){
                         *f = 0;
                         system("clear");
-                        printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                        
+                        printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
                         return;
                     }
                     else if(strcmp(response,"yes")==0||strcmp(response,"Yes")==0||strcmp(response,"YES")==0){
-                        a = read_details_from_file(cust_order);
+                        a = read_details_from_file_d(cust_order_file);
                         system("clear");
-                        printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                        
+                        printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
                     }
                     else{
                         system("clear");
-                        printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                        
+                        printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
                         printf("\n\t\t\t\t\t\t\t\t  Invalid Response, please try again.\n");
                         return;
                     }
                 }
-                printf("\n\n\t\t\t\t\t\t\t\t  Deliveries Available!\n\n");
+                printf("\n\n\t\t\t\t\t\t\t\t  deliveries_d Available!\n\n");
                 int i = 1;
-                struct deliveries* copy = a;
+                struct deliveries_d* copy = a;
                 while(copy!=NULL){
                     printf("\t\t\t\t\t\t\t\t  Order Number %d.\n\t\t\t\t\t\t\t\t  Restaurant Address is %s\n\t\t\t\t\t\t\t\t  Delivery Address is %s\n\n", i, (copy->details).r_a,(copy->details).u_a);
                     i++;
@@ -287,23 +296,29 @@ void show_orders(int* f, char* deliverer_name){
                 printf("\n\n\t\t\t\t\t\t\t\t  Which order do you want to accept?\n\t\t\t\t\t\t\t\t  Press order number to accept it or press 'exit' to go back:");
                 scanf("%s",response);
                 system("clear");
-                printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                
+                printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                 for(int i=0;i<173;i++) printf("_");printf("\n");
                 if(strcmp(response,"exit")==0||strcmp(response,"Exit")==0||strcmp(response,"EXIT")==0||strcmp(response,"no")==0||strcmp(response,"No")==0||strcmp(response,"NO")==0){
                     *f = 0;
                     system("clear");
-                    printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                    
+                    printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                     for(int i=0;i<173;i++) printf("_");printf("\n");
                     return;
                 }
                 else if(atoi(response)>0 && atoi(response)<=i){
                     int c = 0;
-                    int num_delivered = read_number_of_deliveries(accept_file);
-                    delivery_details* accepted_delivery = order_accept(a,atoi(response),generate_OTP(1000,10000),deliverer_name);
-                    remove_delivery_from_file(cust_order, accepted_delivery->order_id);
+                    int num_delivered = read_number_of_deliveries_d(accepted_file);
+                    delivery_details_d* accepted_delivery;
+                    if(testing == 0)
+                    accepted_delivery = order_accept(a,atoi(response),generate_OTP(1000,10000),deliverer_name,accepted_file);
+                    else 
+                    accepted_delivery = order_accept(a,atoi(response),1111,deliverer_name,accepted_file);
+                    remove_delivery_from_file(cust_order_file, accepted_delivery->order_id);
                     do{
                         system("clear");
-                        printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                        printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                         for(int i=0;i<173;i++) printf("_");printf("\n");
                         printf("\n\n\t\t\t\t\t\t\t\t  You have accepted an order.\n\n\t\t\t\t\t\t\t\t  Delivery is from %s to %s.\n\t\t\t\t\t\t\t\t  The order id is %s.\n\t\t\t\t\t\t\t\t  The contact number of the customer is %s.\n\n\n\t\t\t\t\t\t\t\t  If you have delivered the order, press Yes.\n\t\t\t\t\t\t\t\t  Response:", accepted_delivery->r_a, accepted_delivery->u_a, accepted_delivery->order_id, accepted_delivery->id);
                         scanf("%s",response);
@@ -318,16 +333,16 @@ void show_orders(int* f, char* deliverer_name){
                         printf("\n\n\t\t\t\t\t\t\t\t  You have entered the wrong OTP %d %s. Try again:", c, c==1?"time":"times");
                     };
                     system("clear");
-                    printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                    printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                     for(int i=0;i<173;i++) printf("_");printf("\n");
                     printf("\n\n\t\t\t\t\t\t\t\t  You delivery has been confirmed.\n\t\t\t\t\t\t\t\t  You have earned %0.2f rupees.\n\n\n\n", accepted_delivery->commission);
-                    remove_delivery_from_file(accept_file, accepted_delivery->order_id);
-                    print_delivery(accepted_delivery, delivered_file);
+                    remove_delivery_from_file(accepted_file, accepted_delivery->order_id);
+                    print_delivery1(accepted_delivery, delivereded_file);
                     break;
                 }
                 else{
                     system("clear");
-                    printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+                    printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
                     for(int i=0;i<173;i++) printf("_");printf("\n");
                     printf("\n\t\t\t\t\t\t\t\t  Invalid Response, please try again.\n");
                     break;
@@ -336,7 +351,7 @@ void show_orders(int* f, char* deliverer_name){
         }
         else{
             system("clear");
-            printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+            printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
             for(int i=0;i<173;i++) printf("_");printf("\n");
             printf("\n\t\t\t\t\t\t\t\t  Invalid Response, please try again.\n");
             return;
@@ -344,13 +359,13 @@ void show_orders(int* f, char* deliverer_name){
     }
 }
 
-void delivery_main(char* deliverer_name){
+void delivery_main(char* deliverer_name,char* cust_order_file, char* accepted_file, char* delivereded_file, int testing){
     int f = 1;
     system("clear");
-    printf("\t\t\t\t\t\t\t\t  :  : : :::Deliveries Screen::: : :  :\n");
+    printf("\t\t\t\t\t\t\t\t  :  : : :::deliveries_d Screen::: : :  :\n");
     for(int i=0;i<173;i++) printf("_");printf("\n");
     do{
-        show_orders(&f, deliverer_name);
+        show_orders(&f, deliverer_name,cust_order_file, accepted_file, delivereded_file, testing);
     }while(f);
     printf("\n\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t  Thank You!\n\n\n\n\n\n\n\n\n\n\n\n");
 }

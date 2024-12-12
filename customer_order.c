@@ -43,9 +43,9 @@ struct cart{
     int price;
 };
 
-float main_order(cc_new cust){
+float main_order(cc_new cust,char* restfilename, char* cust_order_file, char* num_of_delivs_file){
     FILE *fptr;
-    fptr = fopen("lativ.txt", "r");
+    fptr = fopen(restfilename, "r");
     struct rest r[100];
     int i = 0;
     while(fscanf(fptr,"%s",r[i].name)!=EOF){
@@ -70,6 +70,7 @@ float main_order(cc_new cust){
         scanf("%d",&choice);
         while(choice > i){
             if(choice <=0) break;
+            printf("%d is not a valid choice, please enter again1:",choice);
             printf("Invalid choice, please enter again:");
             scanf("%d",&choice);
         }
@@ -90,6 +91,7 @@ float main_order(cc_new cust){
             printf("Choose type:\n1)Veg\n2)Non-Veg\n3)Jain\n4)See all\n5)Empty cart and go back to Restaurants\n6)View Cart\n");
             scanf("%d",&type_choice);
             while(type_choice<1 || type_choice>6){
+                printf("%d is not a valid choice, please enter again2:",choice);
                 printf("Invalid choice, please enter again:");
                 scanf("%d",&type_choice);
             }
@@ -122,15 +124,15 @@ float main_order(cc_new cust){
                             if(dump == 1) return 0;
                         }
                         else{
-                            FILE * ptr = fopen("num_of_delivs.txt","r");
+                            FILE * ptr = fopen(num_of_delivs_file,"r");
                             int del_id;
                             char del_ids[5];
                             fscanf(ptr,"%d",&del_id);
                             fclose(ptr);
-                            ptr = fopen("num_of_delivs.txt","w");
+                            ptr = fopen(num_of_delivs_file,"w");
                             fprintf(ptr,"%d",del_id+1);
                             fclose(ptr);
-                            ptr = fopen("num_of_delivs.txt","r");
+                            ptr = fopen(num_of_delivs_file,"r");
                             fscanf(ptr,"%s",del_ids);
                             fclose(ptr);
                             while(strlen(del_ids)<4){
@@ -139,7 +141,7 @@ float main_order(cc_new cust){
                                 strcpy(del_ids,temp);
                             }
                             printf("%s %ld\n",del_ids,strlen(del_ids));
-                            ptr = fopen("cust_order.txt","a");
+                            ptr = fopen(cust_order_file,"a");
                             fprintf(ptr,"not_assigned %s %s %s %s 0 %s %.2f %.2f\n", cust.nm, cust.ph, cust.ad, mycart.restaurant.address, del_ids, (float)mycart.price, deliv_cost);
                             fprintf(ptr,"%d\n",mycart.num_of_dishes);
                             for(int j = 0;j< mycart.num_of_dishes;j++){
@@ -162,8 +164,10 @@ float main_order(cc_new cust){
                 printf("%s\nChoose Category:\n1)Breakfast\n2)Maincourse\n3)Beverage\n4)Desserts\n5)Starters\n6)Fastfood\n7)See all\n8)Go back to types\n",rest_chose.name);
                 scanf("%d",&cat_choice);
                 while(cat_choice<1 || cat_choice>8){
+                    printf("%d is not a valid choice, please enter again3:\n",choice);
                     printf("Invalid choice, please enter again:");
                     scanf("%d",&cat_choice);
+                    printf("HELOOOOOOOOOOOOOOOO %d the cat_choice taken is . .....................  ......\n",cat_choice);
                 }
                 if(cat_choice == 8) break;
                 else if(cat_choice == 1) strcpy(cat,"Breakfast");

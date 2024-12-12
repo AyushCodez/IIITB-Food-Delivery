@@ -7,3 +7,9 @@ Bhature 5
 Owais Cust1 1234567890 B227 Nataraj,Neeladri 8640 0009 100.00 59.60
 1
 lassi 2
+AyushGoat sarvesh 9962823761 IIITB Smoor,Neeladri 7881 0011 100.00 59.60
+1
+Cake 1
+AyushGoat Sarvesh 9876543210 B-227 Any_chicken_restaurant 6561 0002 2000.00 20.00
+1
+Any_chicken_dish 5

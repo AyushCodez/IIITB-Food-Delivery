@@ -5,7 +5,7 @@
 #include <math.h>
 #include "delivery.h"
 
-void login();
+void login(char* cust_order, char* accept_file, char* delivered_file);
 
 //CONVERTS a given int to Char*
 char* int_to_char_converter(int n){
@@ -116,7 +116,7 @@ int current_user_id(){
 }
 
 //Creates a new Profile
-void create_profile(){
+void create_profile(char* cust_order, char* accept_file, char* delivered_file){
     char Username[20];
     char Phone_number[11];
     char Pwd[10];
@@ -143,7 +143,7 @@ void create_profile(){
         char dummy;
         scanf("%c", &dummy);
         scanf("%c", &dummy);
-        login();
+        login(cust_order, accept_file, delivered_file);
         return ;
     }
 
@@ -156,11 +156,11 @@ void create_profile(){
     char dummy;
     scanf("%c", &dummy);
     scanf("%c", &dummy);
-    login();
+    login(cust_order, accept_file, delivered_file);
 }
 
 //Show the incorrect login error
-void login_Wrong(){
+void login_Wrong(char* cust_order, char* accept_file, char* delivered_file){
     char Username[20];
     char Pwd[10];
     char option[10];
@@ -170,7 +170,7 @@ void login_Wrong(){
     scanf("%s", option);
     printf("\n");
     if(strcmp(option,"create")==0||strcmp(option,"Create")==0||strcmp(option,"CREATE")==0){
-        create_profile();
+        create_profile(cust_order, accept_file, delivered_file);
         return ;
     }
     else if(strcmp(option,"login")==0||strcmp(option,"Login")==0||strcmp(option,"LOGIN")==0){
@@ -183,11 +183,11 @@ void login_Wrong(){
         if(check_if_already_exists(Username)){
             if(strcmp(retrieve_password(Username), Pwd) == 0){ 
                 printf("Logged in\n");//Owais's Function
-                delivery_main(Username);
+                delivery_main(Username,cust_order, accept_file, delivered_file,0);
                 return ;
             }
             else{
-                login_Wrong();
+                login_Wrong(cust_order, accept_file, delivered_file);
                 return ;
             }
         }
@@ -197,17 +197,17 @@ void login_Wrong(){
             scanf("%c", &dummy);
             scanf("%c", &dummy);
             printf("%c", dummy);
-            login();
+            login(cust_order, accept_file,  delivered_file);
         }
     }
     else{
         printf("Invalid Input\n\n");
-        login();
+        login(cust_order, accept_file, delivered_file);
     }    
 }
 
 //Shows the ogin UI
-void login(){
+void login(char* cust_order, char* accept_file, char* delivered_file){
     char Username[20];
     char Pwd[10];
     char option[10];
@@ -217,7 +217,7 @@ void login(){
     scanf("%s", option);
     printf("\n");
     if(strcmp(option,"create")==0||strcmp(option,"Create")==0||strcmp(option,"CREATE")==0){
-        create_profile();
+        create_profile(cust_order, accept_file, delivered_file);
         return ;
     }
     else if(strcmp(option,"login")==0||strcmp(option,"Login")==0||strcmp(option,"LOGIN")==0){
@@ -230,11 +230,11 @@ void login(){
         if(check_if_already_exists(Username)){
             if(strcmp(retrieve_password(Username), Pwd) == 0){ 
                 printf("Logged in\n");//Owais's Function
-                delivery_main(Username);
+                delivery_main(Username,cust_order, accept_file, delivered_file,0);
                 return ;
             }
             else{
-                login_Wrong();
+                login_Wrong(cust_order, accept_file, delivered_file);
                 return ;
             }
         }
@@ -244,17 +244,20 @@ void login(){
             scanf("%c", &dummy);
             scanf("%c", &dummy);
             printf("%c", dummy);
-            login();
+            login(cust_order, accept_file, delivered_file);
         }
     }
     else{
         printf("Invalid Input\n\n");
-        login();
+        login(cust_order, accept_file, delivered_file);
     }    
 }
 
 
 int main(void){
-    login();
+    char* cust_order = "cust_order.txt";
+    char* accept_file = "accept_file.txt";
+    char* delivered_file = "delivered_file.txt";
+    login(cust_order, accept_file, delivered_file);
     return 0;
 }
